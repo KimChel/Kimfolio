@@ -1,6 +1,6 @@
 import Parallax from "@/app/components/Parallax"
-import Building from "@/app/components/Building"
-import Image from "next/image"
+import Scene from "@/app/components/Scene";
+import Carro from "./components/Carro";
 
 export default function Home() {
   // const layers = [
@@ -24,7 +24,8 @@ export default function Home() {
     <main className="relative w-full h-[100dvh] bg-black overflow-hidden">
       <Parallax layers={layers} />
       <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
-        <Building />
+        <Scene />
+        <Carro></Carro>
       </div>
 
       <div className="relative z-10 flex items-center justify-center h-full">

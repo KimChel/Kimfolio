@@ -1,0 +1,265 @@
+{
+  "frames": {
+    "car_yellow_0": {
+      "frame": { "x": 0, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_1": {
+      "frame": { "x": 256, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_2": {
+      "frame": { "x": 512, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_3": {
+      "frame": { "x": 768, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_4": {
+      "frame": { "x": 1024, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_5": {
+      "frame": { "x": 1280, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_6": {
+      "frame": { "x": 1536, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_7": {
+      "frame": { "x": 1792, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_8": {
+      "frame": { "x": 2048, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_yellow_9": {
+      "frame": { "x": 2304, "y": 0, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+
+    "car_blue_0": {
+      "frame": { "x": 0, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_1": {
+      "frame": { "x": 256, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_2": {
+      "frame": { "x": 512, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_3": {
+      "frame": { "x": 768, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_4": {
+      "frame": { "x": 1024, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_5": {
+      "frame": { "x": 1280, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_6": {
+      "frame": { "x": 1536, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_7": {
+      "frame": { "x": 1792, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_8": {
+      "frame": { "x": 2048, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_blue_9": {
+      "frame": { "x": 2304, "y": 128, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+
+    "car_red_0": {
+      "frame": { "x": 0, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_1": {
+      "frame": { "x": 256, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_2": {
+      "frame": { "x": 512, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_3": {
+      "frame": { "x": 768, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_4": {
+      "frame": { "x": 1024, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_5": {
+      "frame": { "x": 1280, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_6": {
+      "frame": { "x": 1536, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_7": {
+      "frame": { "x": 1792, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_8": {
+      "frame": { "x": 2048, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_red_9": {
+      "frame": { "x": 2304, "y": 256, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+
+    "car_magenta_0": {
+      "frame": { "x": 0, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_1": {
+      "frame": { "x": 256, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_2": {
+      "frame": { "x": 512, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_3": {
+      "frame": { "x": 768, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_4": {
+      "frame": { "x": 1024, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_5": {
+      "frame": { "x": 1280, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_6": {
+      "frame": { "x": 1536, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_7": {
+      "frame": { "x": 1792, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_8": {
+      "frame": { "x": 2048, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    },
+    "car_magenta_9": {
+      "frame": { "x": 2304, "y": 384, "w": 256, "h": 128 },
+      "sourceSize": { "w": 256, "h": 128 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 256, "h": 128 }
+    }
+  },
+
+  "meta": {
+    "image": "carro.png",
+    "format": "RGBA8888",
+    "size": { "w": 2560, "h": 512 },
+    "scale": 1
+  },
+
+  "animations": {
+    "car_yellow": [
+      "car_yellow_0",
+      "car_yellow_1",
+      "car_yellow_2",
+      "car_yellow_3",
+      "car_yellow_4",
+      "car_yellow_5",
+      "car_yellow_6",
+      "car_yellow_7",
+      "car_yellow_8",
+      "car_yellow_9"
+    ],
+    "car_blue": [
+      "car_blue_0",
+      "car_blue_1",
+      "car_blue_2",
+      "car_blue_3",
+      "car_blue_4",
+      "car_blue_5",
+      "car_blue_6",
+      "car_blue_7",
+      "car_blue_8",
+      "car_blue_9"
+    ],
+    "car_red": [
+      "car_red_0",
+      "car_red_1",
+      "car_red_2",
+      "car_red_3",
+      "car_red_4",
+      "car_red_5",
+      "car_red_6",
+      "car_red_7",
+      "car_red_8",
+      "car_red_9"
+    ],
+    "car_magenta": [
+      "car_magenta_0",
+      "car_magenta_1",
+      "car_magenta_2",
+      "car_magenta_3",
+      "car_magenta_4",
+      "car_magenta_5",
+      "car_magenta_6",
+      "car_magenta_7",
+      "car_magenta_8",
+      "car_magenta_9"
+    ]
+  }
+}

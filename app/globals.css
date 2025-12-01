@@ -9,9 +9,15 @@
   height: 100dvh;
 }
 
+body{
+    cursor: none !important;
+}
+
 html, body {
   height: 100%;
+
 }
+
 
 @theme inline {
   --color-background: var(--background);
