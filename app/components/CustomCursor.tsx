@@ -3,69 +3,75 @@
 import { useEffect, useState } from "react";
 
 export default function CustomCursor() {
-    const [pos, setPos] = useState({ x: 0, y: 0 });
-    const [clicked, setClicked] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [clicked, setClicked] = useState(false);
 
-    useEffect(() => {
-        const move = (e: MouseEvent) => {
-            setPos({ x: e.clientX + 16, y: e.clientY + 16 });
-        }
+  useEffect(() => {
+    const move = (e: MouseEvent) => {
+      setPos({ x: e.clientX + 16, y: e.clientY + 16 });
+    };
 
-        const click = (e: MouseEvent) => {
-            if (e.type === "mousedown") setClicked(true);
-            else setClicked(false);
+    window.addEventListener("mousemove", move);
+    return () => {
+      window.removeEventListener("mousemove", move);
+    };
+  }, []);
 
-        }
+  useEffect(() => {
+    const click = (e: MouseEvent) => {
+      if (e.type === "mousedown") setClicked(true);
+      else if (e.type === "mouseup") setClicked(false);
+    };
 
-        window.addEventListener("click", click);
+    window.addEventListener("mousedown", click);
+    window.addEventListener("mouseup", click);
 
-        window.addEventListener("mousemove", move);
-        return () => {
-            window.removeEventListener("mousemove", move);
-            window.removeEventListener("click", click);
-        };
-    }, []);
+    return () => {
+      window.removeEventListener("mousedown", click);
+      window.removeEventListener("mouseup", click);
+    };
+  }, []);
 
-    return (
-        <div>
-
-            {clicked &&
-
-                <div
-                    style={{
-                        position: "fixed",
-                        left: pos.x,
-                        top: pos.y,
-                        width: "32px",
-                        height: "32px",
-                        backgroundImage: "url('/assets/cursor/pointer.png')",
-                        backgroundSize: "contain",
-                        backgroundRepeat: "no-repeat",
-                        transform: "translate(-50%, -50%)",
-                        pointerEvents: "none",
-                        zIndex: 9999,
-                        imageRendering: "pixelated",
-                    }}
-                ></div>
-            } : {
-                <div
-                    style={{
-                        position: "fixed",
-                        left: pos.x,
-                        top: pos.y,
-                        width: "32px",
-                        height: "32px",
-                        backgroundImage: "url('/assets/cursor/pointerClicked.png')",
-                        backgroundSize: "contain",
-                        backgroundRepeat: "no-repeat",
-                        transform: "translate(-50%, -50%)",
-                        pointerEvents: "none",
-                        zIndex: 9999,
-                        imageRendering: "pixelated",
-                    }}
-                ></div>
-            }
-        </div>
-    )
-
+  return (
+    <div>
+      {clicked && (
+        <div
+          style={{
+            position: "fixed",
+            left: pos.x,
+            top: pos.y,
+            width: "32px",
+            height: "32px",
+            backgroundImage: "url('/assets/cursor/pointerClicked.png')",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            transform: "translate(-50%, -50%)",
+            pointerEvents: "none",
+            zIndex: 9999,
+            imageRendering: "pixelated",
+            display: !clicked ? "none" : "block",
+          }}
+        ></div>
+      )}{" "}
+      {
+        <div
+          style={{
+            position: "fixed",
+            left: pos.x,
+            top: pos.y,
+            width: "32px",
+            height: "32px",
+            backgroundImage: "url('/assets/cursor/pointer.png')",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            transform: "translate(-50%, -50%)",
+            pointerEvents: "none",
+            zIndex: 9999,
+            imageRendering: "pixelated",
+            display: !clicked ? "block" : "none",
+          }}
+        ></div>
+      }
+    </div>
+  );
 }

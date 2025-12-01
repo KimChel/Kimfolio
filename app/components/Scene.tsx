@@ -69,6 +69,7 @@ export default function Scene() {
               width={100}
               height={100}
               className="absolute"
+              unoptimized
               style={{
                 top: "30%",   // adjust these to match the building
                 left: "42%",
