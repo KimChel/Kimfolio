@@ -23,9 +23,8 @@ export default function Home() {
   return (
     <main className="relative w-full h-[100dvh] bg-black overflow-hidden">
       <Parallax layers={layers} />
-      <div className="absolute inset-0 z-20 pointer-events-none flex items-center justify-center">
+      <div className="absolute inset-0 z-20 flex items-center justify-center">
         <Scene />
-        {/* <Carro></Carro> */}
       </div>
 
       <div className="relative z-10 flex items-center justify-center h-full">

@@ -209,7 +209,7 @@
     "image": "carro.png",
     "format": "RGBA8888",
     "size": { "w": 2560, "h": 512 },
-    "scale": 1
+    "scale": "0.9"
   },
 
   "animations": {

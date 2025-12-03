@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { use, useEffect } from "react";
 import Image from "next/image";
+import Carro from "./Carro";
 
 export default function Scene() {
-
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -25,7 +25,7 @@ export default function Scene() {
   }, [x, y]);
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden">
       <motion.div
         style={{
           translateX: useTransform(x, (val) => val * 1.5),
@@ -33,14 +33,10 @@ export default function Scene() {
           scale: 1.02,
         }}
         className="
-        pointer-events-none absolute inset-0
+        absolute inset-0
         "
       >
-
-        <div
-          className="w-full h-full relative"
-
-        >
+        <div className="w-full h-full relative">
           <div
             className="
           absolute bottom-0 left-1/2 -translate-x-1/2
@@ -51,16 +47,15 @@ export default function Scene() {
               aspectRatio: "16 / 9",
             }}
           >
-
             <Image
               src="/assets/building.png"
               alt="building"
-              width={1920}   // set actual pixel width of your image
+              width={1920} // set actual pixel width of your image
               height={1080}
               unoptimized
               className="absolute inset-0 w-full h-full"
               style={{
-                imageRendering: 'pixelated'
+                imageRendering: "pixelated",
               }}
             />
             <Image
@@ -71,18 +66,18 @@ export default function Scene() {
               className="absolute"
               unoptimized
               style={{
-                top: "30%",   // adjust these to match the building
+                top: "30%",
                 left: "42%",
-                width: "20%",  // optional: make it scale WITH the building
-                imageRendering: 'pixelated'
+                width: "20%", 
+                imageRendering: "pixelated",
               }}
             />
           </div>
-
-
+          <div className="absolute inset-0 z-10 pointer-events-auto">
+            <Carro />
+          </div>
         </div>
-
       </motion.div>
     </div>
-  )
-}   
+  );
+}

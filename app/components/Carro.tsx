@@ -1,6 +1,14 @@
 "use client";
 import { s } from "framer-motion/client";
-import { Application, Container, AnimatedSprite, Assets, Spritesheet, SpritesheetData } from "pixi.js";
+import {
+  Application,
+  Container,
+  AnimatedSprite,
+  Assets,
+  Spritesheet,
+  SpritesheetData,
+  Texture,
+} from "pixi.js";
 import { useEffect, useRef } from "react";
 
 export default function Car() {
@@ -12,22 +20,54 @@ export default function Car() {
     const app = new Application();
 
     (async () => {
+      await app.init({
+        resizeTo: containerRef.current,
+        backgroundAlpha: 0, // transparent so PNGs behind are visible
+      });
+      containerRef.current!.appendChild(app.canvas);
+      const sheet = await Assets.load("/assets/carro.json");
+      const frames = sheet.animations!["car_yellow"];
 
-      await app.init({ width: containerRef.current!.clientWidth, height: containerRef.current!.clientHeight });
-      document.body.appendChild(app.canvas);
+      const carroSprite = new AnimatedSprite(frames);
 
-      const sheet: SpritesheetData = await Assets.load("/assets/carro.json");
-
-      const animations = sheet.animations
-
-      const skata = animations!['car_yellow']
-
-      const carroSprite = AnimatedSprite.fromFrames(skata)
-
-      carroSprite.animationSpeed = 1 / 6;                     // 6 fps
-      carroSprite.position.set(150, 150); // almost bottom-left corner of the canvas
+      carroSprite.animationSpeed = 1 / 6;
+      carroSprite.position.set(300, 800);
       carroSprite.play();
 
+      carroSprite.eventMode = "static";
+
+      let dragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      carroSprite.on("pointerdown", (e) => {
+        dragging = true;
+
+        const global = e.global;
+        offsetX = global.x - carroSprite.x;
+        offsetY = global.y - carroSprite.y;
+      });
+
+      app.stage.on("pointermove", (e) => {
+        debugger
+        if (!dragging) return;
+
+        const global = e.global;
+        carroSprite.x = global.x - offsetX;
+        carroSprite.y = global.y - offsetY;
+      });
+
+      app.stage.on("pointerup", () => {
+        dragging = false;
+        carroSprite.cursor = "grab";
+      });
+
+      app.stage.on("pointerupoutside", () => {
+        dragging = false;
+        carroSprite.cursor = "grab";
+      });
+
+      app.stage.addChild(carroSprite);
     })();
 
     return () => {
@@ -38,5 +78,5 @@ export default function Car() {
     };
   }, []);
 
-  return <div ref={containerRef} className="absolute inset-0 pointer-events-none" />;
+  return <div ref={containerRef} className="absolute inset-0" />;
 }
