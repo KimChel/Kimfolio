@@ -31,11 +31,11 @@ export default function Car() {
       const carroSprite = new AnimatedSprite(frames);
 
       carroSprite.animationSpeed = 1 / 6;
-      carroSprite.position.set(300, 800);
+      carroSprite.position.set( containerRef.current!.offsetWidth / 2, containerRef.current!.offsetHeight - (containerRef.current!.offsetWidth / 16));
       carroSprite.play();
 
       carroSprite.eventMode = "static";
-
+      carroSprite.scale = {x: containerRef.current!.offsetWidth / 8000, y: containerRef.current!.offsetWidth / 8000};
       let dragging = false;
       let offsetX = 0;
       let offsetY = 0;

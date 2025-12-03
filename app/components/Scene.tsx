@@ -72,9 +72,9 @@ export default function Scene() {
                 imageRendering: "pixelated",
               }}
             />
-          </div>
           <div className="absolute inset-0 z-10 pointer-events-auto">
             <Carro />
+          </div>
           </div>
         </div>
       </motion.div>
