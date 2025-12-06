@@ -43,7 +43,7 @@ export default function Parallax({layers}: Props) {
           marginTop: layer.mt || 0,
         }}
         className="
-        pointer-events-none absolute inset-0
+        absolute inset-0
         "
         >
           <div className="w-full h-full"

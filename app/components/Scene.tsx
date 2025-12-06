@@ -59,16 +59,16 @@ export default function Scene() {
               }}
             />
             <Image
-              src="/assets/kimon_neon.gif"
+              src="/assets/chat_bubbles/chat-about.png"
               alt="neon gif"
-              width={100}
-              height={100}
+              width={30}
+              height={30}
               className="absolute"
               unoptimized
               style={{
-                top: "30%",
-                left: "42%",
-                width: "20%", 
+                top: "55%",
+                left: "37%",
+                width: "5%", 
                 imageRendering: "pixelated",
               }}
             />

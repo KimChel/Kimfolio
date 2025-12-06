@@ -1,0 +1,45 @@
+{
+  "frames": {
+    "dish_0": {
+      "frame": { "x": 0, "y": 0, "w": 24, "h": 24 },
+      "sourceSize": { "w": 24, "h": 24 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }
+    },
+    "dish_1": {
+      "frame": { "x": 24, "y": 0, "w": 24, "h": 24 },
+      "sourceSize": { "w": 24, "h": 24 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }
+    },
+    "dish_2": {
+      "frame": { "x": 48, "y": 0, "w": 24, "h": 24 },
+      "sourceSize": { "w": 24, "h": 24 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }
+    },
+    "dish_3": {
+      "frame": { "x": 72, "y": 0, "w": 24, "h": 24 },
+      "sourceSize": { "w": 24, "h": 24 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }
+    },
+    "dish_4": {
+      "frame": { "x": 96, "y": 0, "w": 24, "h": 24 },
+      "sourceSize": { "w": 24, "h": 24 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }
+    },
+    "dish_5": {
+      "frame": { "x": 120, "y": 0, "w": 24, "h": 24 },
+      "sourceSize": { "w": 24, "h": 24 },
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 24, "h": 24 }
+    }
+  },
+
+  "animations": {
+    "dish": ["dish_0", "dish_1", "dish_2", "dish_3", "dish_4", "dish_5"]
+  },
+
+  "meta": {
+    "image": "dish.png",
+    "format": "RGBA8888",
+    "size": { "w": 144, "h": 24 },
+    "scale": "1"
+  }
+}

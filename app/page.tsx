@@ -1,6 +1,5 @@
 import Parallax from "@/app/components/Parallax"
 import Scene from "@/app/components/Scene";
-import Carro from "./components/Carro";
 
 export default function Home() {
   // const layers = [
