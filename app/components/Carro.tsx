@@ -9,10 +9,11 @@ import Matter from "matter-js";
 import { useEffect, useRef } from "react";
 
 export default function Car() {
-  const containerRef = useRef<HTMLDivElement>(undefined);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container!) return;
 
     const app = new Application();
 
@@ -23,14 +24,14 @@ export default function Car() {
       //
 
       await app.init({
-        resizeTo: containerRef.current,
+        resizeTo: container!,
         backgroundAlpha: 0, // transparent so PNGs behind are visible
       });
 
       TextureStyle.defaultOptions.scaleMode = "nearest"
 
 
-      containerRef.current!.appendChild(app.canvas);
+      container!.appendChild(app.canvas);
 
       //
       // ░░   SPRITE SETUP   ░░ 
@@ -76,7 +77,7 @@ export default function Car() {
 
       const engine = Matter.Engine.create();
       engine.gravity.y = 1.2;
-      let groundWidth = containerRef.current!.clientWidth;
+      let groundWidth = container!.clientWidth;
 
       //
       // ░░   PHYSICS FOR CARRO   ░░ 
@@ -99,7 +100,7 @@ export default function Car() {
 
       const ground = Matter.Bodies.rectangle(
         groundWidth / 2,
-        containerRef.current!.clientHeight - 200,
+        container!.clientHeight - 200,
         groundWidth,
         40,
         { isStatic: true }
@@ -125,10 +126,10 @@ export default function Car() {
       window.addEventListener("resize", resizeSprite);
 
       function resizeSprite() {
-        const carroScale = containerRef.current!.clientWidth / 1920;
-        const neonScale = containerRef.current!.clientWidth / 600;
-        const dishScale = containerRef.current!.clientWidth / 600;
-        const newGroundWidth = containerRef.current!.clientWidth;
+        const carroScale = container!!.clientWidth / 1920;
+        const neonScale = container!.clientWidth / 600;
+        const dishScale = container!.clientWidth / 600;
+        const newGroundWidth = container!.clientWidth;
 
         const scaleRatio = carroScale / lastCarroScale;
         Matter.Body.scale(carroBody, scaleRatio, scaleRatio);
@@ -139,25 +140,25 @@ export default function Car() {
         groundWidth = newGroundWidth;
         Matter.Body.setPosition(ground, {
           x: newGroundWidth / 2,
-          y: containerRef.current!.clientHeight - 200
+          y: container!.clientHeight - 200
         });
 
         carroYellowSprite.scale.set(carroScale);
         neonSprite.scale.set(neonScale);
         dishSprite.scale.set(dishScale);
 
-        const carroX = containerRef.current!.clientWidth * carrorelX;
-        const carroY = containerRef.current!.clientHeight * carrorelY;
+        const carroX = container!.clientWidth * carrorelX;
+        const carroY = container!.clientHeight * carrorelY;
         Matter.Body.setPosition(carroBody, { x: carroX, y: carroY });
         carroYellowSprite.x = carroBody.position.x;
         carroYellowSprite.y = carroBody.position.y;
 
 
-        neonSprite.x = containerRef.current!.clientWidth * neonRelX;
-        neonSprite.y = containerRef.current!.clientHeight * neonRelY;
+        neonSprite.x = container!.clientWidth * neonRelX;
+        neonSprite.y = container!.clientHeight * neonRelY;
 
-        dishSprite.x = containerRef.current!.clientWidth * dishRelX;
-        dishSprite.y = containerRef.current!.clientHeight * dishRelY;
+        dishSprite.x = container!.clientWidth * dishRelX;
+        dishSprite.y = container!.clientHeight * dishRelY;
       }
 
 
@@ -255,8 +256,8 @@ export default function Car() {
 
     return () => {
       app.destroy(true, true);
-      if (containerRef.current?.firstChild) {
-        containerRef.current.removeChild(containerRef.current.firstChild);
+      if (container!?.firstChild) {
+        container!.removeChild(container!.firstChild);
       }
     };
   }, []);
