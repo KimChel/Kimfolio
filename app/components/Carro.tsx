@@ -9,7 +9,7 @@ import Matter from "matter-js";
 import { useEffect, useRef } from "react";
 
 export default function Car() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(undefined);
 
   useEffect(() => {
     if (!containerRef.current) return;
