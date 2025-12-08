@@ -3,7 +3,7 @@
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import { use, useEffect } from "react";
 import Image from "next/image";
-import Carro from "./Carro";
+import Engine from "./Engine";
 
 export default function Scene() {
   const x = useMotionValue(0);
@@ -73,7 +73,7 @@ export default function Scene() {
               }}
             />
           <div className="absolute inset-0 z-10 pointer-events-auto">
-            <Carro />
+            <Engine />
           </div>
           </div>
         </div>
