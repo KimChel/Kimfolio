@@ -184,8 +184,6 @@ export default function Engine() {
           y: container!.clientHeight - 200,
         });
 
-        
-
         neonSprite.scale.set(neonScale);
         dishSprite.scale.set(dishScale);
 
@@ -194,6 +192,11 @@ export default function Engine() {
 
         dishSprite.x = container!.clientWidth * dishRelX;
         dishSprite.y = container!.clientHeight * dishRelY;
+
+        activeCars.forEach((car) => {
+          car.sprite.scale.set(carroScale);
+          Matter.Body.scale(car.body, scaleRatio, scaleRatio);
+        });
       }
 
       //
