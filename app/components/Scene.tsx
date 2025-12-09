@@ -4,6 +4,7 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { use, useEffect } from "react";
 import Image from "next/image";
 import Engine from "./Engine";
+import Link from "next/link";
 
 export default function Scene() {
   const x = useMotionValue(0);
@@ -58,23 +59,10 @@ export default function Scene() {
                 imageRendering: "pixelated",
               }}
             />
-            <Image
-              src="/assets/chat_bubbles/chat-about.png"
-              alt="neon gif"
-              width={30}
-              height={30}
-              className="absolute"
-              unoptimized
-              style={{
-                top: "55%",
-                left: "37%",
-                width: "5%", 
-                imageRendering: "pixelated",
-              }}
-            />
-          <div className="absolute inset-0 z-10 pointer-events-auto">
-            <Engine />
-          </div>
+
+            <div className="absolute inset-0 z-10 pointer-events-auto">
+              <Engine />
+            </div>
           </div>
         </div>
       </motion.div>

@@ -1,5 +1,11 @@
 "use client";
-import { Application, AnimatedSprite, Assets, TextureStyle, Sprite } from "pixi.js";
+import {
+  Application,
+  AnimatedSprite,
+  Assets,
+  TextureStyle,
+  Sprite,
+} from "pixi.js";
 import Matter from "matter-js";
 import { useEffect, useRef } from "react";
 import { s } from "framer-motion/client";
@@ -35,14 +41,6 @@ export default function Engine() {
 
       container!.appendChild(app.canvas);
 
-      function randomRange(min: number, max: number) {
-        return Math.random() * (max - min) + min;
-      }
-
-      function randomInt(min: number, max: number) {
-        return Math.floor(randomRange(min, max + 1));
-      }
-
       //
       // ░░   SPRITE SETUP   ░░
       //
@@ -52,7 +50,7 @@ export default function Engine() {
       //
       const carroSheet = await Assets.load("/assets/carro.json");
 
-      const carroColors = ["car_yellow", "car_blue", "car_magenta"];
+      const carroColors = ["car_yellow", "car_blue", "car_magenta", "car_red"];
 
       let activeCars: CarroEntity[] = [];
 
@@ -90,7 +88,7 @@ export default function Engine() {
           {
             restitution: 0.1,
             friction: 0.4,
-            collisionFilter: {group: -1},
+            collisionFilter: { group: -1 },
           }
         );
 
@@ -143,36 +141,26 @@ export default function Engine() {
         await Assets.load("/assets/street_lights.png")
       );
 
-      const streetLightSprite3 = new Sprite(
-        await Assets.load("/assets/street_lights.png")
-      );
-
       streetLightSprite1.anchor.set(0.5, 1);
-      streetLightSprite1.x = container!.clientWidth * 0.142;
-      streetLightSprite1.y = container!.clientHeight * 1.013;
+      streetLightSprite1.x = container!.clientWidth * 0.303;
+      streetLightSprite1.y = container!.clientHeight * 1.009;
       streetLightSprite1.scale.set(container!.clientWidth / 600);
       streetLightSprite1.alpha = 0.4;
       streetLightSprite1.zIndex = 10;
 
       streetLightSprite2.anchor.set(0.5, 1);
-      streetLightSprite2.x = container!.clientWidth * 0.434;
+      streetLightSprite2.x = container!.clientWidth * 0.725;
       streetLightSprite2.y = container!.clientHeight * 1.013;
       streetLightSprite2.scale.set(container!.clientWidth / 600);
       streetLightSprite2.alpha = 0.4;
       streetLightSprite2.zIndex = 10;
 
-      streetLightSprite3.anchor.set(0.5, 1);
-      streetLightSprite3.x = container!.clientWidth * 0.725;
-      streetLightSprite3.y = container!.clientHeight * 1.013;
-      streetLightSprite3.scale.set(container!.clientWidth / 600);
-      streetLightSprite3.alpha = 0.4;
-      streetLightSprite3.zIndex = 10;
       //
       // ░░   MATERIAL ENGINE   ░░
       //
 
       const engine = Matter.Engine.create();
-      engine.gravity.y = 1.2;
+      engine.gravity.y = 0.4;
       let groundWidth = container!.clientWidth;
 
       //
@@ -193,14 +181,11 @@ export default function Engine() {
       // ░░   RESPONSIVE LOGIC   ░░
       //
 
-      const carrorelX = 0.12;
-      const carrorelY = 0.8;
-
       const neonRelX = 0.4;
       const neonRelY = 0.3;
 
-      const dishRelX = 0.45;
-      const dishRelY = 0.3;
+      const dishRelX = 0.63;
+      const dishRelY = 0.328;
 
       let lastCarroScale = 1;
 
@@ -208,25 +193,16 @@ export default function Engine() {
       window.addEventListener("resize", resizeSprite);
 
       function resizeSprite() {
+        // Update sprite values
         const carroScale = container!!.clientWidth / 1920;
         const neonScale = container!.clientWidth / 600;
         const dishScale = container!.clientWidth / 600;
-        const newGroundWidth = container!.clientWidth;
+        const lightScale = container!.clientWidth / 600;
 
-        const scaleRatio = carroScale / lastCarroScale;
-        lastCarroScale = carroScale;
-
-        const groundScaleX = newGroundWidth / groundWidth;
-        Matter.Body.scale(ground, groundScaleX, 1);
-        groundWidth = newGroundWidth;
-        spawnRandomCarro()
-        Matter.Body.setPosition(ground, {
-          x: newGroundWidth / 2,
-          y: container!.clientHeight- 50,
-        });
-        
         neonSprite.scale.set(neonScale);
         dishSprite.scale.set(dishScale);
+        streetLightSprite1.scale.set(lightScale);
+        streetLightSprite2.scale.set(lightScale);
 
         neonSprite.x = container!.clientWidth * neonRelX;
         neonSprite.y = container!.clientHeight * neonRelY;
@@ -234,10 +210,34 @@ export default function Engine() {
         dishSprite.x = container!.clientWidth * dishRelX;
         dishSprite.y = container!.clientHeight * dishRelY;
 
+        streetLightSprite1.x = container!.clientWidth * 0.303;
+        streetLightSprite1.y = container!.clientHeight * 1.009;
+
+        streetLightSprite2.x = container!.clientWidth * 0.725;
+        streetLightSprite2.y = container!.clientHeight * 1.013;
+
+        // Update ground
+
+        const newGroundWidth = container!.clientWidth;
+
+        const groundScaleX = newGroundWidth / groundWidth;
+        Matter.Body.scale(ground, groundScaleX, 1);
+        groundWidth = newGroundWidth;
+        
+        Matter.Body.setPosition(ground, {
+          x: newGroundWidth / 2,
+          y: container!.clientHeight - 50,
+        });
+
+        const scaleRatio = carroScale / lastCarroScale;
+        lastCarroScale = carroScale;
+
         activeCars.forEach((car) => {
           car.sprite.scale.set(carroScale);
           Matter.Body.scale(car.body, scaleRatio, scaleRatio);
         });
+
+        spawnRandomCarro();
       }
 
       //
@@ -343,17 +343,15 @@ export default function Engine() {
         }
       });
 
-      app.stage.addChild(dishSprite);
       app.stage.addChild(neonSprite);
+      app.stage.addChild(dishSprite);
+      app.stage.addChild(streetLightSprite1);
+      app.stage.addChild(streetLightSprite2);
       setInterval(() => {
         if (activeCars.length < 3) {
           spawnRandomCarro();
         }
       }, 4000);
-      app.stage.addChild(streetLightSprite1);
-      app.stage.addChild(streetLightSprite2);
-      app.stage.addChild(streetLightSprite3);
-
     })();
 
     return () => {
