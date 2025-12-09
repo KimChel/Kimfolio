@@ -86,7 +86,8 @@ export default function Engine() {
           carroSprite.height * carroSprite.scale.y,
           {
             restitution: 0.1,
-            friction: 0.9,
+            friction: 0.4,
+            collisionFilter: {group: -1},
           }
         );
 
@@ -179,9 +180,10 @@ export default function Engine() {
         const groundScaleX = newGroundWidth / groundWidth;
         Matter.Body.scale(ground, groundScaleX, 1);
         groundWidth = newGroundWidth;
+        spawnRandomCarro()
         Matter.Body.setPosition(ground, {
           x: newGroundWidth / 2,
-          y: container!.clientHeight - 200,
+          y: container!.clientHeight- 50,
         });
 
         neonSprite.scale.set(neonScale);
@@ -270,7 +272,7 @@ export default function Engine() {
 
         activeCars.forEach((car) => {
           if (!car.dragging) {
-            const speed = 2;
+            const speed = 1;
             if (car.direction === "left") {
               car.sprite.scale.x = -Math.abs(car.sprite.scale.x);
             }
