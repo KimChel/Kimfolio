@@ -1,7 +1,8 @@
 "use client";
-import { Application, AnimatedSprite, Assets, TextureStyle } from "pixi.js";
+import { Application, AnimatedSprite, Assets, TextureStyle, Sprite } from "pixi.js";
 import Matter from "matter-js";
 import { useEffect, useRef } from "react";
+import { s } from "framer-motion/client";
 
 interface CarroEntity {
   sprite: AnimatedSprite;
@@ -30,6 +31,7 @@ export default function Engine() {
       });
 
       TextureStyle.defaultOptions.scaleMode = "nearest";
+      app.stage.sortableChildren = true; // enable z-index ordering
 
       container!.appendChild(app.canvas);
 
@@ -66,6 +68,7 @@ export default function Engine() {
         carroSprite.play();
         carroSprite.anchor.set(0.5);
         carroSprite.eventMode = "static";
+        carroSprite.zIndex = 1;
 
         const direction = Math.random() < 0.5 ? "left" : "right";
 
@@ -129,6 +132,42 @@ export default function Engine() {
       dishSprite.play();
 
       //
+      // ░░   Street Lights Setup   ░░
+      //
+
+      const streetLightSprite1 = new Sprite(
+        await Assets.load("/assets/street_lights.png")
+      );
+
+      const streetLightSprite2 = new Sprite(
+        await Assets.load("/assets/street_lights.png")
+      );
+
+      const streetLightSprite3 = new Sprite(
+        await Assets.load("/assets/street_lights.png")
+      );
+
+      streetLightSprite1.anchor.set(0.5, 1);
+      streetLightSprite1.x = container!.clientWidth * 0.142;
+      streetLightSprite1.y = container!.clientHeight * 1.013;
+      streetLightSprite1.scale.set(container!.clientWidth / 600);
+      streetLightSprite1.alpha = 0.4;
+      streetLightSprite1.zIndex = 10;
+
+      streetLightSprite2.anchor.set(0.5, 1);
+      streetLightSprite2.x = container!.clientWidth * 0.434;
+      streetLightSprite2.y = container!.clientHeight * 1.013;
+      streetLightSprite2.scale.set(container!.clientWidth / 600);
+      streetLightSprite2.alpha = 0.4;
+      streetLightSprite2.zIndex = 10;
+
+      streetLightSprite3.anchor.set(0.5, 1);
+      streetLightSprite3.x = container!.clientWidth * 0.725;
+      streetLightSprite3.y = container!.clientHeight * 1.013;
+      streetLightSprite3.scale.set(container!.clientWidth / 600);
+      streetLightSprite3.alpha = 0.4;
+      streetLightSprite3.zIndex = 10;
+      //
       // ░░   MATERIAL ENGINE   ░░
       //
 
@@ -185,7 +224,7 @@ export default function Engine() {
           x: newGroundWidth / 2,
           y: container!.clientHeight- 50,
         });
-
+        
         neonSprite.scale.set(neonScale);
         dishSprite.scale.set(dishScale);
 
@@ -295,7 +334,7 @@ export default function Engine() {
           const car = activeCars[i];
           const x = car.body.position.x;
 
-          if (x < -400 || x > container!.clientWidth + 400) {
+          if (x < -400 || x > container!.clientWidth + 800) {
             // Remove car
             Matter.World.remove(engine.world, car.body);
             app.stage.removeChild(car.sprite);
@@ -307,10 +346,14 @@ export default function Engine() {
       app.stage.addChild(dishSprite);
       app.stage.addChild(neonSprite);
       setInterval(() => {
-        if (activeCars.length < 2) {
+        if (activeCars.length < 3) {
           spawnRandomCarro();
         }
-      }, 1500);
+      }, 4000);
+      app.stage.addChild(streetLightSprite1);
+      app.stage.addChild(streetLightSprite2);
+      app.stage.addChild(streetLightSprite3);
+
     })();
 
     return () => {
