@@ -25,12 +25,6 @@ export default function Home() {
       <div className="absolute inset-0 z-20 flex items-center justify-center">
         <Scene />
       </div>
-
-      <div className="relative z-10 flex items-center justify-center h-full">
-        <h1 className="text-white text-4xl font-bold">
-          My Parallax Test
-        </h1>
-      </div>
     </main>
   );
 }
