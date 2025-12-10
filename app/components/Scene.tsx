@@ -4,7 +4,7 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { use, useEffect } from "react";
 import Image from "next/image";
 import Engine from "./Engine";
-import Link from "next/link";
+import Menu from "./Menu"
 
 export default function Scene() {
   const x = useMotionValue(0);
@@ -27,6 +27,9 @@ export default function Scene() {
 
   return (
     <div className="absolute inset-0 overflow-hidden">
+      <nav className="absolute top-4 right-4 z-50">
+        <Menu /> {/* Place the new Menu Component here */}
+      </nav>
       <motion.div
         style={{
           translateX: useTransform(x, (val) => val * 1.5),

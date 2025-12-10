@@ -155,6 +155,7 @@ export default function Engine() {
       streetLightSprite2.alpha = 0.4;
       streetLightSprite2.zIndex = 10;
 
+
       //
       // ░░   MATERIAL ENGINE   ░░
       //
@@ -223,7 +224,7 @@ export default function Engine() {
         const groundScaleX = newGroundWidth / groundWidth;
         Matter.Body.scale(ground, groundScaleX, 1);
         groundWidth = newGroundWidth;
-        
+
         Matter.Body.setPosition(ground, {
           x: newGroundWidth / 2,
           y: container!.clientHeight - 50,
