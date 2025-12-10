@@ -50,7 +50,28 @@ body {
   }
 }
 
+
 /* Utility class to match `animate-blink` */
 .animate-blink {
   animation: blink 1s steps(1, end) infinite;
+}
+
+.terminal-scroll {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #00ff00 #004d00;
+}
+
+
+.terminal-scroll::-webkit-scrollbar {
+  width: 2px !important; /* !important before the semicolon */
+}
+
+.terminal-scroll::-webkit-scrollbar-track {
+  background: #004d00 !important; /* Darker green or black for the track */
+  border-left: 1px solid #00ff00 !important; /* Corrected: Visual separation */
+}
+
+.terminal-scroll::-webkit-scrollbar-thumb {
+  background-color: #00ff00 !important; /* Bright green for the thumb */
+  border: 1px solid #00ff00 !important; /* Makes it look chunky */
 }
