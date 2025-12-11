@@ -28,7 +28,7 @@ export default function Scene() {
   return (
     <div className="absolute inset-0 overflow-hidden">
       <nav className="absolute top-4 right-4 z-50">
-        <Menu /> {/* Place the new Menu Component here */}
+        <Menu /> 
       </nav>
       <motion.div
         style={{

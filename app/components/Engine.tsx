@@ -93,7 +93,9 @@ export default function Engine() {
         );
 
         Matter.World.add(engine.world, carroBody);
-        app.stage.addChild(carroSprite);
+        if (app.stage) {
+          app.stage.addChild(carroSprite);
+        }
 
         const carro: CarroEntity = {
           sprite: carroSprite,
@@ -154,7 +156,6 @@ export default function Engine() {
       streetLightSprite2.scale.set(container!.clientWidth / 600);
       streetLightSprite2.alpha = 0.4;
       streetLightSprite2.zIndex = 10;
-
 
       //
       // ░░   MATERIAL ENGINE   ░░
@@ -343,22 +344,29 @@ export default function Engine() {
           }
         }
       });
-
-      app.stage.addChild(neonSprite);
-      app.stage.addChild(dishSprite);
-      app.stage.addChild(streetLightSprite1);
-      app.stage.addChild(streetLightSprite2);
-      setInterval(() => {
-        if (activeCars.length < 3) {
-          spawnRandomCarro();
-        }
-      }, 4000);
+      if (app.stage) {
+        app.stage.addChild(neonSprite);
+        app.stage.addChild(dishSprite);
+        app.stage.addChild(streetLightSprite1);
+        app.stage.addChild(streetLightSprite2);
+        const carSpawnInterval = setInterval(() => {
+          if (activeCars.length < 3) {
+            spawnRandomCarro();
+          }
+        }, 4000);
+      }
     })();
 
     return () => {
-      app.destroy(true, true);
-      if (container!?.firstChild) {
-        container!.removeChild(container!.firstChild);
+      // window.removeEventListener("resize", resizeSprite);
+      // if (carSpawnInterval) {
+      //   clearInterval(carSpawnInterval); // <--- New: Clear your interval!
+      // }
+      if (app) {
+        app.destroy(true, { children: true, texture: true }); // Use detailed options for thorough cleanup
+        if (container!?.firstChild) {
+          container!.removeChild(container!.firstChild);
+        }
       }
     };
   }, []);

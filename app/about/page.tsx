@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Typewriter from "typewriter-effect";
+import Menu from "../components/Menu";
+import BackButton from "../components/BackButton";
 
 export default function AboutPage() {
   const [loading, setLoading] = useState(true);
@@ -24,7 +26,7 @@ export default function AboutPage() {
 
 kimon@dev-os:~$ `;
 
-const asciiBanner = `
+  const asciiBanner = `
 .--------------------------------------------.
 | _____  _                   ____            |
 ||  |  ||_| _____  ___  ___ |    \\  ___ _ _  |
@@ -51,7 +53,12 @@ const asciiBanner = `
           imageRendering: "pixelated",
         }}
       >
-        <button>{"<"}</button>
+        <nav className="absolute top-4 left-4 z-50">
+          <BackButton />
+        </nav>
+        <nav className="absolute top-4 right-4 z-50">
+          <Menu />
+        </nav>
         {loading ? (
           <div className="absolute inset-0 z-50 flex items-center justify-center">
             <div className="min-w-[220px] bg-black/90 border border-green-500 shadow-[0_0_20px_rgba(0,255,0,0.6)_inset,0_0_8px_rgba(0,255,0,0.6)] text-green-500 px-6 py-5 font-mono uppercase tracking-[0.08em]">
@@ -69,45 +76,41 @@ const asciiBanner = `
           </div>
         ) : (
           <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-[25%] left-[12%] right-[12%] bottom-[20%] flex flex-col items-center justify-center p-4 ">
-            <div
-              className="w-full max-w-[1000px] h-full p-6 text-green-500 font-mono terminal-scroll overflow-y-auto "
-              style={{
-                imageRendering: "pixelated",
-                textShadow: "0 0 1px #00ff00, 0 0 4px #00ff00",
-              }}
-            >
-              
-              {/* ASCII Magic Banner (Always visible after loading) */}
-              <pre className="text-xs sm:text-sm lg:text-lg mb-8 whitespace-pre-wrap leading-tight text-white">
-                {asciiBanner}
-              </pre>
+            <div className="absolute top-[25%] left-[12%] right-[12%] bottom-[20%] flex flex-col items-center justify-center p-4 ">
+              <div
+                className="w-full max-w-[800px] h-full p-6 text-green-500 font-mono terminal-scroll overflow-y-auto "
+                style={{
+                  imageRendering: "pixelated",
+                  textShadow: "0 0 1px #00ff00, 0 0 4px #00ff00",
+                }}
+              >
+                {/* ASCII Magic Banner (Always visible after loading) */}
+                <pre className="text-xs sm:text-sm lg:text-lg mb-8 whitespace-pre-wrap leading-tight text-white">
+                  {asciiBanner}
+                </pre>
 
-              {/* Typewriter Effect wraps all the content */}
-              {!loading && (
-                <div className="text-lg leading-relaxed whitespace-pre-wrap">
-                  <Typewriter
-                    onInit={(typewriter) => {
-                      typewriter
-                        .typeString(contentString)
-                        .start();
-                    }}
-                    options={{
-                      delay: 15, // Fast typing speed, slightly slower than 10 for readability
-                      cursorClassName: "text-lg text-green-500 animate-blink",
-                      // Remove the default loop/pause if you only want it to run once
-                      loop: false,
-                    }}
-                  />
-                  
-                  {/* The final blinking cursor element is now part of the typewriter string itself */}
-                </div>
-              )}
-            </div>
+                {/* Typewriter Effect wraps all the content */}
+                {!loading && (
+                  <div className="text-lg leading-relaxed whitespace-pre-wrap">
+                    <Typewriter
+                      onInit={(typewriter) => {
+                        typewriter.typeString(contentString).start();
+                      }}
+                      options={{
+                        delay: 15, // Fast typing speed, slightly slower than 10 for readability
+                        cursorClassName: "text-lg text-green-500 animate-blink",
+                        // Remove the default loop/pause if you only want it to run once
+                        loop: false,
+                      }}
+                    />
+
+                    {/* The final blinking cursor element is now part of the typewriter string itself */}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
-
       </div>
     </main>
   );
