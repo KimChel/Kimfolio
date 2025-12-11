@@ -8,7 +8,7 @@ import {
 } from "pixi.js";
 import Matter from "matter-js";
 import { useEffect, useRef } from "react";
-import { s } from "framer-motion/client";
+import { canvas, s } from "framer-motion/client";
 
 interface CarroEntity {
   sprite: AnimatedSprite;
@@ -19,27 +19,37 @@ interface CarroEntity {
 
 export default function Engine() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-
+  const appRef = useRef<Application | null>(null)
   useEffect(() => {
     const container = containerRef.current;
     if (!container!) return;
 
-    const app = new Application();
+    let isCancelled = false
 
-    (async () => {
+    const initPixi = async () => {
+      const app = new Application();
+
+      await app.init({
+        resizeTo: container,
+        backgroundAlpha: 0, // transparent so PNGs behind are visible
+        preference: "webgl"
+      });
+
+      if (isCancelled) {
+        app.destroy({ removeView: true }, { children: true, texture: true })
+        return;
+      }
+
+      appRef.current = app;
+
+      container.appendChild(app.canvas);
+
       //
       // ░░   PIXI APP   ░░
       //
 
-      await app.init({
-        resizeTo: container!,
-        backgroundAlpha: 0, // transparent so PNGs behind are visible
-      });
-
-      TextureStyle.defaultOptions.scaleMode = "nearest";
+      TextureStyle.defaultOptions.scaleMode = "nearest"; //pixelated rendering
       app.stage.sortableChildren = true; // enable z-index ordering
-
-      container!.appendChild(app.canvas);
 
       //
       // ░░   SPRITE SETUP   ░░
@@ -120,7 +130,6 @@ export default function Engine() {
       //
       // ░░   Dish Setup   ░░
       //
-
       const dishSheet = await Assets.load("/assets/dishFrames/dish.json");
       const dishFrames = dishSheet.animations["dish"];
       const dishSprite = new AnimatedSprite(dishFrames);
@@ -158,6 +167,20 @@ export default function Engine() {
       streetLightSprite2.zIndex = 10;
 
       //
+      // ░░   Dev Sign Setup   ░░
+      //
+
+      const devSign = new Sprite(
+        await Assets.load("/assets/dev_sign.png")
+      )
+
+      devSign.anchor.set(0.5, 1);
+      // devSign.x = container!.clientWidth * 0.615;
+      // devSign.y = container!.clientHeight *0.48;
+      devSign.scale.set(container!.clientWidth / 600);
+      devSign.zIndex = 10;
+
+      //
       // ░░   MATERIAL ENGINE   ░░
       //
 
@@ -189,6 +212,9 @@ export default function Engine() {
       const dishRelX = 0.63;
       const dishRelY = 0.328;
 
+      const devSignRelX = 0.615
+      const devSignRelY = 0.48;
+
       let lastCarroScale = 1;
 
       resizeSprite();
@@ -200,11 +226,13 @@ export default function Engine() {
         const neonScale = container!.clientWidth / 600;
         const dishScale = container!.clientWidth / 600;
         const lightScale = container!.clientWidth / 600;
+        const devSignScale = container!.clientWidth / 600;
 
         neonSprite.scale.set(neonScale);
         dishSprite.scale.set(dishScale);
         streetLightSprite1.scale.set(lightScale);
         streetLightSprite2.scale.set(lightScale);
+        devSign.scale.set(devSignScale)
 
         neonSprite.x = container!.clientWidth * neonRelX;
         neonSprite.y = container!.clientHeight * neonRelY;
@@ -217,6 +245,9 @@ export default function Engine() {
 
         streetLightSprite2.x = container!.clientWidth * 0.725;
         streetLightSprite2.y = container!.clientHeight * 1.013;
+
+        devSign.x = container!.clientWidth * devSignRelX;
+        devSign.y = container!.clientHeight * devSignRelY;
 
         // Update ground
 
@@ -349,24 +380,29 @@ export default function Engine() {
         app.stage.addChild(dishSprite);
         app.stage.addChild(streetLightSprite1);
         app.stage.addChild(streetLightSprite2);
-        const carSpawnInterval = setInterval(() => {
+        app.stage.addChild(devSign)
+        setInterval(() => {
           if (activeCars.length < 3) {
             spawnRandomCarro();
           }
         }, 4000);
       }
-    })();
+
+    }
+
+    initPixi()
+
 
     return () => {
-      // window.removeEventListener("resize", resizeSprite);
-      // if (carSpawnInterval) {
-      //   clearInterval(carSpawnInterval); // <--- New: Clear your interval!
-      // }
+      isCancelled = true;
+
+      const app = appRef.current;
       if (app) {
-        app.destroy(true, { children: true, texture: true }); // Use detailed options for thorough cleanup
-        if (container!?.firstChild) {
-          container!.removeChild(container!.firstChild);
-        }
+        if ((app as any)._customCleanup) (app as any)._customCleanup()
+
+        //destroy pipi
+        app.destroy({ removeView: true }, { children: true, texture: true })
+
       }
     };
   }, []);
