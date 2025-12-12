@@ -4,9 +4,22 @@ import React, { useEffect, useState } from "react";
 import Typewriter from "typewriter-effect";
 import Menu from "../components/Menu";
 import BackButton from "../components/BackButton";
+import { label } from "framer-motion/client";
+import TerminalMenu from "../components/TerminalMenu";
 
+export enum CartridgeSelection {
+  ABOUT_CARTRIDGE = "about",
+  PROJECTS_CARTRIDGE = "projects"
+}
 export default function AboutPage() {
   const [loading, setLoading] = useState(true);
+
+  const menuItems = [
+    { label: "ABOUT", selected: false },
+    { label: "PROJECTS", selected: false },
+    { label: "SKILLS", selected: false },
+    { label: "CONTACT", selected: false },
+  ]
 
   const contentString = `
 [+] init kimon.bio
@@ -59,6 +72,9 @@ kimon@dev-os:~$ `;
         <nav className="absolute top-4 right-4 z-50">
           <Menu />
         </nav>
+        <nav className="absolute top-[40%] left-[15%] z-50">
+          <TerminalMenu selectedCartridge={CartridgeSelection.ABOUT_CARTRIDGE} />
+        </nav>
         {loading ? (
           <div className="absolute inset-0 z-50 flex items-center justify-center">
             <div className="min-w-[220px] bg-black/90 border border-green-500 shadow-[0_0_20px_rgba(0,255,0,0.6)_inset,0_0_8px_rgba(0,255,0,0.6)] text-green-500 px-6 py-5 font-mono uppercase tracking-[0.08em]">
@@ -77,6 +93,7 @@ kimon@dev-os:~$ `;
         ) : (
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-[25%] left-[12%] right-[12%] bottom-[20%] flex flex-col items-center justify-center p-4 ">
+
               <div
                 className="w-full max-w-[800px] h-full p-6 text-green-500 font-mono terminal-scroll overflow-y-auto "
                 style={{

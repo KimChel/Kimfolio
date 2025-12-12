@@ -58,20 +58,19 @@ body {
 
 .terminal-scroll {
   scrollbar-width: thin; /* Firefox */
-  scrollbar-color: #00ff00 #004d00;
+  scrollbar-color: #00ff00 #000000;
 }
 
 
 .terminal-scroll::-webkit-scrollbar {
-  width: 2px !important; /* !important before the semicolon */
+  width: 1px !important; /* !important before the semicolon */
 }
 
 .terminal-scroll::-webkit-scrollbar-track {
-  background: #004d00 !important; /* Darker green or black for the track */
+  background: #0a0a0a !important; /* Darker green or black for the track */
   border-left: 1px solid #00ff00 !important; /* Corrected: Visual separation */
 }
 
 .terminal-scroll::-webkit-scrollbar-thumb {
-  background-color: #00ff00 !important; /* Bright green for the thumb */
   border: 1px solid #00ff00 !important; /* Makes it look chunky */
 }
