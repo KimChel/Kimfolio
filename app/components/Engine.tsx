@@ -295,7 +295,7 @@ export default function Engine() {
           if (pointerHistory.length < 2) return;
           const first = pointerHistory[0];
           const last = pointerHistory[pointerHistory.length - 1];
-          const dt = (last.t - first.t) / 5;
+          const dt = (last.t - first.t) / 1;
           if (dt <= 0) return;
 
           const vx = (last.x - first.x) / dt;
@@ -349,10 +349,12 @@ export default function Engine() {
               car.sprite.scale.x = -Math.abs(car.sprite.scale.x);
             }
 
-            Matter.Body.setVelocity(car.body, {
-              x: car.direction === "left" ? -speed : speed,
-              y: car.body.velocity.y,
-            });
+            if (Matter.Collision.collides(car.body, ground)) {
+              Matter.Body.setVelocity(car.body, {
+                x: car.direction === "left" ? -speed : speed,
+                y: car.body.velocity.y,
+              });
+            }
           }
 
           Matter.Engine.update(engine, 16.666); // physics

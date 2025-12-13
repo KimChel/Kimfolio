@@ -1,5 +1,5 @@
 import { randomInt } from 'crypto';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CartridgeSelection } from '../about/page';
 
 const RetroCassette = ({
@@ -48,10 +48,10 @@ const RetroCassette = ({
 
             {/* Cassette Window */}
             <div
-              className="hidden sm:flex absolute left-1/2 -translate-x-1/2 w-32 h-6 bg-white border-2 border-black items-center justify-center space-x-3 opacity-90 font-serif italic font-bold text-black text-sm"
+              className="hidden sm:flex absolute left-[70%] -translate-x-1/2 w-32 h-6 bg-white border-2 border-black items-center justify-center space-x-3 opacity-90 font-serif italic font-bold text-black text-sm"
               style={{ transform: `translateX(-50%) rotate(${rotation}deg)` }}
             >
-              {text}
+              <span>{text}</span>
             </div>
           </div>
 
@@ -69,43 +69,43 @@ const RetroCassette = ({
 };
 export default function TerminalMenu({ selectedCartridge }: { selectedCartridge: string }) {
 
-    const menuItems = [
-        { label: "INSERT ABOUT", href: "/about", color: "bg-green-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.ABOUT_CARTRIDGE },
-        { label: "INSERT PROJECTS", href: "/projects", color: "bg-blue-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE },
-        { label: "INSERT SKILLS", href: "/skills", color: "bg-yellow-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE },
-        { label: "INSERT CV", href: "/cv", color: "bg-purple-500", casette: "Resume //BACKUP", selected: selectedCartridge === CartridgeSelection.ABOUT_CARTRIDGE },
-        { label: "INSERT CONTACT", href: "/contact", color: "bg-red-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE },
-    ];
+  const menuItems = [
+    { label: "INSERT ABOUT", href: "/about", color: "bg-green-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.ABOUT_CARTRIDGE, rotation: -3 },
+    { label: "INSERT PROJECTS", href: "/projects", color: "bg-blue-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE, rotation: -1 },
+    { label: "INSERT SKILLS", href: "/skills", color: "bg-yellow-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE, rotation: 4 },
+    { label: "INSERT CV", href: "/cv", color: "bg-purple-500", casette: "Resume //BACKUP", selected: selectedCartridge === CartridgeSelection.ABOUT_CARTRIDGE, rotation: -3 },
+    { label: "INSERT CONTACT", href: "/contact", color: "bg-red-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE, rotation: 0 },
+  ];
 
 
-    return (
-        <div
-            className="absolute top-0 right-0 w-80 bg-amber-50 p-4 border-l-4 border-b-4 border-black shadow-[-4px_4px_0px_0px_rgba(0,0,0,1)]"
-            style={{ imageRendering: "pixelated" }}
-        >
-            {/* HEADER */}
-            <div className="flex justify-between items-center mb-6 border-b-2 border-black pb-2 border-dashed">
-                <span className="text-black text-xs font-bold tracking-widest px-2 py-1 ">
+  return (
+    <div
+      className="absolute top-0 right-0 w-80 bg-amber-50 p-4 border-l-4 border-b-4 border-black shadow-[-4px_4px_0px_0px_rgba(0,0,0,1)]"
+      style={{ imageRendering: "pixelated" }}
+    >
+      {/* HEADER */}
+      <div className="flex justify-between items-center mb-6 border-b-2 border-black pb-2 border-dashed">
+        <span className="text-black text-xs font-bold tracking-widest px-2 py-1 ">
                     // SELECT_CARTRIDGE
-                </span>
-                <div className="w-3 h-3 bg-red-500 animate-pulse rounded-full border border-black"></div>
-            </div>
+        </span>
+        <div className="w-3 h-3 bg-red-500 animate-pulse rounded-full border border-black"></div>
+      </div>
 
-            {/* LIST ITEMS */}
-            <ul className="flex flex-col space-y-4">
-                {menuItems.map((item) => (
-                    <li key={item.label} onClick={() => console.log(`Loading ${item.href}...`)}>
-                        <span className="font-mono font-bold text-xs text-black/70 tracking-tighter uppercase">{item.label}</span>
+      {/* LIST ITEMS */}
+      <ul className="flex flex-col space-y-4">
+        {menuItems.map((item) => (
+          <li key={item.label} onClick={() => console.log(`Loading ${item.href}...`)}>
+            <span className="font-mono font-bold text-xs text-black/70 tracking-tighter uppercase">{item.label}</span>
 
-                        <RetroCassette
-                            color={item.color}
-                            text={item.casette}
-                            rotation={Math.floor(Math.random() * 9) - 4}
-                            selected={item.selected}
-                        />
-                    </li>
-                ))}
-            </ul>
-        </div>
-    )
+            <RetroCassette
+              color={item.color}
+              text={item.casette}
+              rotation={item.rotation}
+              selected={item.selected}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
 }
