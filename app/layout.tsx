@@ -2,6 +2,22 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import CustomCursor from "./components/CustomCursor";
+import localFont from 'next/font/local'
+
+const pixel = localFont({
+  src: [
+    {
+      path: './fonts/PixelOperator8.ttf',
+      weight: '400',
+      style: 'normal'
+    },
+    {
+      path: '/fonts/PixelOperator8-Bold.ttf',
+      weight: '700',
+      style: 'bold'
+    }
+  ]}
+)
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${pixel.className} antialiased`}
       >
         <CustomCursor />
         {children}

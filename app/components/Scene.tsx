@@ -27,9 +27,25 @@ export default function Scene() {
 
   return (
     <div className="absolute inset-0 overflow-hidden">
-      <nav className="absolute top-4 right-4 z-50">
-        <Menu /> 
+      <nav className="absolute top-4 right-4 z-50 text-left">
+        <Menu />
       </nav>
+      {/* <div className="absolute top-[25%] right-[7%] w-xl h-150 z-50
+       bg-gray-400/10 
+        border-10 border-blue-600/10 rounded-xl
+      ">      */}
+       <div className="absolute top-[25%] right-[7%] w-2xl h-150 z-50
+
+      ">
+        <div className="absolute top-5 left-5 opacity-85 font-(--font-pixel) font-[700] text-3xl">
+
+          <h1 className="">Retro vibes</h1>
+          <div className="mt-7">
+
+            <span className="text-xl">Grab and throw the cars now! {'>'}{':'}{')'}</span>
+          </div>
+        </div>
+      </div>
       <motion.div
         style={{
           translateX: useTransform(x, (val) => val * 1.5),

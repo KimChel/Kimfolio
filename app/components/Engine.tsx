@@ -295,7 +295,7 @@ export default function Engine() {
           if (pointerHistory.length < 2) return;
           const first = pointerHistory[0];
           const last = pointerHistory[pointerHistory.length - 1];
-          const dt = (last.t - first.t) / 1;
+          const dt = (last.t - first.t) / 2;
           if (dt <= 0) return;
 
           const vx = (last.x - first.x) / dt;
