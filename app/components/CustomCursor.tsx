@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 export default function CustomCursor() {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [clicked, setClicked] = useState(false);
+  const [isHovered, setIsHovered] = useState(false)
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -32,46 +33,67 @@ export default function CustomCursor() {
     };
   }, []);
 
-  return (
-    <div>
-      {clicked && (
-        <div
-          style={{
-            position: "fixed",
-            left: pos.x,
-            top: pos.y,
-            width: "32px",
-            height: "32px",
-            backgroundImage: "url('/assets/cursor/pointerClicked.png')",
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            zIndex: 9999,
-            imageRendering: "pixelated",
-            display: !clicked ? "none" : "block",
-          }}
-        ></div>
-      )}{" "}
-      {
-        <div
-          style={{
-            position: "fixed",
-            left: pos.x,
-            top: pos.y,
-            width: "32px",
-            height: "32px",
-            backgroundImage: "url('/assets/cursor/pointer.png')",
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            zIndex: 9999,
-            imageRendering: "pixelated",
-            display: !clicked ? "block" : "none",
-          }}
-        ></div>
+  useEffect(() => {
+    const handleHover = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      const isClickable =
+        target.tagName === "BUTTON" ||
+        target.closest("a") ||
+        target.closest("button") ||
+        (target.tagName === "INPUT" &&
+          (target.getAttribute("type") === "submit" ||
+            target.getAttribute("type") === "button")
+        )
+
+      if (e.type === "mouseover" && isClickable) {
+        setIsHovered(true)
+      } else if (e.type === "mouseout" && isClickable) {
+        setIsHovered(false)
+      }else if(!isClickable){
+        setIsHovered(false)
       }
-    </div>
+
+    }
+
+    window.addEventListener("mouseover", handleHover);
+    window.addEventListener("mouseout", handleHover);
+
+    return () => {
+      window.removeEventListener("mouseover", handleHover)
+      window.removeEventListener("mouseout", handleHover);
+    }
+
+  }, [])
+
+  const getCursorImage = () => {
+    if (clicked && !isHovered) return "url('/assets/cursor/pointerClicked.png')"
+    if (isHovered) return "url('/assets/cursor/pointerHover.png')"
+    return "url('/assets/cursor/pointer.png')"
+  }
+
+  return (
+
+    <div
+style={{
+        position: "fixed",
+        left: pos.x,
+        top: pos.y,
+        width: "32px",
+        height: "32px",
+        backgroundImage: getCursorImage(),
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        transform: "translate(-50%, -50%)",
+        pointerEvents: "none",
+        zIndex: 9999,
+        imageRendering: "pixelated",
+        // Only hide the custom cursor if the system cursor leaves the window? 
+        // Or simply always show it.
+        display: "block", 
+        transition: "background-image 0.1s ease", // Optional: smooth transition between images
+      }}
+    ></div>
+
   );
 }

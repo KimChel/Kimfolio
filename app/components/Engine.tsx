@@ -178,7 +178,6 @@ export default function Engine() {
       // devSign.x = container!.clientWidth * 0.615;
       // devSign.y = container!.clientHeight *0.48;
       devSign.scale.set(container!.clientWidth / 600);
-      devSign.zIndex = 10;
 
       //
       // ░░   MATERIAL ENGINE   ░░

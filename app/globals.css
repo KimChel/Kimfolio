@@ -9,9 +9,17 @@
   height: 100dvh;
 }
 
-body{
-    cursor: none !important;
+* {
+  cursor: none !important;
 }
+/* OR, if you only want it hidden on the body */
+body {
+  cursor: none;
+}
+
+/* button:hover{
+  cursor: url('/public/assets/cursor/pointerHover.png')
+} */
 
 html, body {
   height: 100%;

@@ -1,5 +1,4 @@
-import { randomInt } from 'crypto';
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { CartridgeSelection } from '../about/page';
 
 const RetroCassette = ({
@@ -7,14 +6,20 @@ const RetroCassette = ({
   text,
   rotation,
   selected,
+  onClick,
 }: {
   color: string;
   text: string;
   rotation: number;
   selected: boolean;
+  onClick: () => void;
 }) => {
   return (
-    <div className="group relative w-full h-12 bg-gray-900 rounded-sm border-2 border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center p-1 cursor-pointer transition-transform hover:-translate-x-2">
+    <button
+      type="button"
+      onClick={onClick}
+      className="group relative w-full h-12 bg-gray-900 rounded-sm border-2 border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center p-1 transition-transform hover:-translate-x-2"
+    >
 
       {selected ? (
         // 🔥 Render this if selected === true
@@ -48,7 +53,7 @@ const RetroCassette = ({
 
             {/* Cassette Window */}
             <div
-              className="hidden sm:flex absolute left-[70%] -translate-x-1/2 w-32 h-6 bg-white border-2 border-black items-center justify-center space-x-3 opacity-90 font-serif italic font-bold text-black text-sm"
+              className="hidden sm:flex absolute left-[70%] -translate-x-1/2 w-40 h-6 bg-white border-2 border-black items-center justify-center space-x-3 opacity-90 font-serif italic font-bold text-black text-sm"
               style={{ transform: `translateX(-50%) rotate(${rotation}deg)` }}
             >
               <span>{text}</span>
@@ -64,19 +69,63 @@ const RetroCassette = ({
         </div>
       )}
 
-    </div>
+    </button>
   );
 };
-export default function TerminalMenu({ selectedCartridge }: { selectedCartridge: string }) {
-
+export default function TerminalMenu({
+  selectedCartridge,
+  onSelectCartridge,
+}: {
+  selectedCartridge: CartridgeSelection;
+  onSelectCartridge: (selected: CartridgeSelection) => void;
+}) {
   const menuItems = [
-    { label: "INSERT ABOUT", href: "/about", color: "bg-green-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.ABOUT_CARTRIDGE, rotation: -3 },
-    { label: "INSERT PROJECTS", href: "/projects", color: "bg-blue-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE, rotation: -1 },
-    { label: "INSERT SKILLS", href: "/skills", color: "bg-yellow-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE, rotation: 4 },
-    { label: "INSERT CV", href: "/cv", color: "bg-purple-500", casette: "Resume //BACKUP", selected: selectedCartridge === CartridgeSelection.ABOUT_CARTRIDGE, rotation: -3 },
-    { label: "INSERT CONTACT", href: "/contact", color: "bg-red-500", casette: "Who am I???", selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE, rotation: 0 },
+    {
+      label: "INSERT ABOUT",
+      href: "/about",
+      color: "bg-green-500",
+      casette: "Who am I???",
+      selected: selectedCartridge === CartridgeSelection.ABOUT_CARTRIDGE,
+      rotation: 1,
+      selection: CartridgeSelection.ABOUT_CARTRIDGE,
+    },
+    {
+      label: "INSERT PROJECTS",
+      href: "/projects",
+      color: "bg-blue-500",
+      casette: "Stuff I built (mostly works)",
+      selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE,
+      rotation: -1,
+      selection: CartridgeSelection.PROJECTS_CARTRIDGE,
+    },
+    {
+      label: "INSERT SKILLS",
+      href: "/skills",
+      color: "bg-yellow-500",
+      casette: "Things I’m good at",
+      selected: selectedCartridge === CartridgeSelection.SKILLS_CARTRIDGE,
+      rotation: 4,
+      selection: CartridgeSelection.SKILLS_CARTRIDGE,
+    },
+    {
+      label: "INSERT CV",
+      href: "/cv",
+      color: "bg-purple-500",
+      casette: "Resume // BACKUP",
+      selected: selectedCartridge === CartridgeSelection.CV_CARTRIDGE,
+      rotation: -3,
+      selection: CartridgeSelection.CV_CARTRIDGE,
+    },
+    {
+      label: "INSERT CONTACT",
+      href: "/contact",
+      color: "bg-red-500",
+      casette: "Call me maybe?",
+      selected: selectedCartridge === CartridgeSelection.CONTACT_CARTRIDGE,
+      rotation: 0,
+      selection: CartridgeSelection.CONTACT_CARTRIDGE,
+    },
   ];
-
 
   return (
     <div
@@ -94,7 +143,7 @@ export default function TerminalMenu({ selectedCartridge }: { selectedCartridge:
       {/* LIST ITEMS */}
       <ul className="flex flex-col space-y-4">
         {menuItems.map((item) => (
-          <li key={item.label} onClick={() => console.log(`Loading ${item.href}...`)}>
+          <li key={item.label}>
             <span className="font-mono font-bold text-xs text-black/70 tracking-tighter uppercase">{item.label}</span>
 
             <RetroCassette
@@ -102,6 +151,7 @@ export default function TerminalMenu({ selectedCartridge }: { selectedCartridge:
               text={item.casette}
               rotation={item.rotation}
               selected={item.selected}
+              onClick={() => onSelectCartridge(item.selection)}
             />
           </li>
         ))}
