@@ -319,14 +319,16 @@ const CvView = () => {
             </h3>
             <div className="space-y-3">
               <div>
-                <div className="font-bold">M.Sc. Security & Big Data</div>
+                <div className="font-bold">M.Sc. Security, Big Data</div>
+                <div className="font-bold">& Simulations</div>
                 <div className="text-xs opacity-80">
                   University of Thessaly | Grade: 9.73/10
                 </div>
               </div>
               <div>
                 <div className="font-bold">B.Sc. Computer Science</div>
-                <div className="text-xs opacity-80">University of Thessaly</div>
+                <div className="font-bold">& Telecommunications</div>
+                <div className="text-xs opacity-80">University of Thessaly | Grade: 6.9/10</div>
               </div>
             </div>
           </section>
@@ -443,7 +445,7 @@ const ContactView = () => {
 // --- Main Page Component ---
 
 export default function TerminalPage() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedCartridge, setSelectedCartridge] =
     useState<CartridgeSelection>(CartridgeSelection.ABOUT_CARTRIDGE);
 
@@ -452,7 +454,7 @@ export default function TerminalPage() {
 
   // Handle Loading Simulation on Cartridge Switch
   useEffect(() => {
-    setLoading(false);
+    setLoading(true);
     const timer = setTimeout(() => setLoading(false), 1500); // 1.5s load time
     return () => clearTimeout(timer);
   }, [selectedCartridge]);

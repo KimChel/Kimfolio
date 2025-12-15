@@ -141,3 +141,30 @@ body {
 .terminal-scroll-rose::-webkit-scrollbar-thumb {
   border: 1px solid oklch(64.5% 0.246 16.439) !important; /* Makes it look chunky */
 }
+
+/* globals.css */
+
+@keyframes loading-bar-animation {
+  0% {
+    /* Start position: The gradient is entirely off to the left */
+    transform: translateX(-100%);
+  }
+  100% {
+    /* End position: The gradient is entirely off to the right */
+    transform: translateX(200%);
+  }
+}
+
+.animate-loading-bar {
+  /* Apply the animation */
+  animation: loading-bar-animation 1.5s infinite linear;
+  
+  /* Create the shiny/scanning effect using a moving gradient */
+  /* This ensures the color uses the dynamic 'bootColor' set inline in the component */
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%, /* A white/light transparent center for the "shine" */
+    transparent 100%
+  );
+}
