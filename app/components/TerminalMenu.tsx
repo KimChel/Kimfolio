@@ -53,7 +53,7 @@ const RetroCassette = ({
 
             {/* Cassette Window */}
             <div
-              className="hidden sm:flex absolute left-[70%] -translate-x-1/2 w-40 h-6 bg-white border-2 border-black items-center justify-center space-x-3 opacity-90 font-serif italic font-bold text-black text-sm"
+              className="hidden sm:flex absolute left-[75%] -translate-x-1/2 w-40 h-6 bg-white border-2 border-black items-center justify-center space-x-3 opacity-90 font-serif italic font-bold text-black text-sm"
               style={{ transform: `translateX(-50%) rotate(${rotation}deg)` }}
             >
               <span>{text}</span>
