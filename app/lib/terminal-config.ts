@@ -8,6 +8,15 @@ export enum TerminalPath {
   CV = "/terminal/cv",
 }
 
+export enum CartridgeSelection {
+  ABOUT_CARTRIDGE = "about",
+  PROJECTS_CARTRIDGE = "projects",
+  SKILLS_CARTRIDGE = "skills",
+  CONTACT_CARTRIDGE = "contact",
+  CV_CARTRIDGE = "cv",
+}
+
+
 export const CARTRIDGE_THEMES = {
   [TerminalPath.ABOUT]: {
     name: "KIMON.OS v1.0",

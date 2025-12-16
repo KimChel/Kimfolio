@@ -46,8 +46,7 @@ export default function TerminalLayout({
           <Menu />
         </nav>
         <nav className="absolute top-[30%] left-[17%] z-50 sm:scale-75">
-          <TerminalMenu
-          />
+          <TerminalMenu />
         </nav>
 
         {loading ? (
