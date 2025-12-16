@@ -1,38 +1,40 @@
 import React from 'react'
-import { CartridgeSelection } from '../about/page';
+import { CartridgeSelection } from '../terminal/page';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
+import { TerminalPath } from '../lib/terminal-config';
+import Link from 'next/link';
 
 const RetroCassette = ({
   color,
   text,
   rotation,
   selected,
-  onClick,
+  href,
 }: {
   color: string;
   text: string;
   rotation: number;
   selected: boolean;
-  onClick: () => void;
+  href: string
 }) => {
   return (
-    <button
-      type="button"
-      onClick={onClick}
+<Link
+      href={href}
       className="group relative w-full h-12 bg-gray-900 rounded-sm border-2 border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center p-1 transition-transform hover:-translate-x-2"
     >
-
       {selected ? (
         // 🔥 Render this if selected === true
-        <div className="w-full h-full flex items-center justify-center text-white font-bold">
-          SELECTED
+        <div className="w-full h-full flex items-center justify-center text-white font-bold bg-green-700/80 border-2 border-green-500">
+          <span className="animate-pulse">LOADED</span>
         </div>
       ) : (
         // 🔥 Render this if selected === false
         <div className="relative w-full h-full">
-
           {/* The Colored Sticker Label */}
-          <div className={`relative w-full h-full ${color} border-2 border-black flex items-center px-2 overflow-hidden`}>
-
+          <div
+            className={`relative w-full h-full ${color} border-2 border-black flex items-center px-2 overflow-hidden`}
+          >
             {/* Grip lines left */}
             <div
               className="absolute top-0 bottom-0 left-0 w-4 border-r-2 border-black/20"
@@ -65,63 +67,63 @@ const RetroCassette = ({
           <div className="absolute top-0.5 right-0.5 w-1 h-1 bg-gray-500 rounded-full"></div>
           <div className="absolute bottom-0.5 left-0.5 w-1 h-1 bg-gray-500 rounded-full"></div>
           <div className="absolute bottom-0.5 right-0.5 w-1 h-1 bg-gray-500 rounded-full"></div>
-
         </div>
       )}
-
-    </button>
+    </Link>
   );
 };
-export default function TerminalMenu({
-  selectedCartridge,
-  onSelectCartridge,
-}: {
-  selectedCartridge: CartridgeSelection;
-  onSelectCartridge: (selected: CartridgeSelection) => void;
-}) {
+
+
+export default function TerminalMenu() {
+
+  const pathname = usePathname()
+  const currentCartridge = pathname
+  
+  // const router = useRouter()
+
   const menuItems = [
     {
       label: "INSERT ABOUT",
-      href: "/about",
+      href: TerminalPath.ABOUT,
       color: "bg-green-500",
       casette: "Who am I???",
-      selected: selectedCartridge === CartridgeSelection.ABOUT_CARTRIDGE,
+      selected: currentCartridge.trimStart() === CartridgeSelection.ABOUT_CARTRIDGE,
       rotation: 1,
       selection: CartridgeSelection.ABOUT_CARTRIDGE,
     },
     {
       label: "INSERT PROJECTS",
-      href: "/projects",
+      href: TerminalPath.PROJECTS,
       color: "bg-blue-500",
       casette: "Stuff I built (mostly works)",
-      selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE,
+      selected: currentCartridge === CartridgeSelection.PROJECTS_CARTRIDGE,
       rotation: -1,
       selection: CartridgeSelection.PROJECTS_CARTRIDGE,
     },
     {
       label: "INSERT SKILLS",
-      href: "/skills",
+      href: TerminalPath.SKILLS,
       color: "bg-yellow-500",
       casette: "Things I’m good at",
-      selected: selectedCartridge === CartridgeSelection.SKILLS_CARTRIDGE,
+      selected: currentCartridge === CartridgeSelection.SKILLS_CARTRIDGE,
       rotation: 4,
       selection: CartridgeSelection.SKILLS_CARTRIDGE,
     },
     {
       label: "INSERT CV",
-      href: "/cv",
+      href: TerminalPath.CV,
       color: "bg-purple-500",
       casette: "Resume // BACKUP",
-      selected: selectedCartridge === CartridgeSelection.CV_CARTRIDGE,
+      selected: currentCartridge === CartridgeSelection.CV_CARTRIDGE,
       rotation: -3,
       selection: CartridgeSelection.CV_CARTRIDGE,
     },
     {
       label: "INSERT CONTACT",
-      href: "/contact",
+      href: TerminalPath.CONTACT,
       color: "bg-red-500",
       casette: "Call me maybe?",
-      selected: selectedCartridge === CartridgeSelection.CONTACT_CARTRIDGE,
+      selected: currentCartridge === CartridgeSelection.CONTACT_CARTRIDGE,
       rotation: 0,
       selection: CartridgeSelection.CONTACT_CARTRIDGE,
     },
@@ -151,7 +153,7 @@ export default function TerminalMenu({
               text={item.casette}
               rotation={item.rotation}
               selected={item.selected}
-              onClick={() => onSelectCartridge(item.selection)}
+              href={item.href}
             />
           </li>
         ))}

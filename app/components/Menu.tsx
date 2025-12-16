@@ -7,11 +7,11 @@ export default function Menu() {
 
   // Define the menu links for easy scaling
   const menuItems = [
-    { label: "ABOUT", href: "/about", color: "bg-green-500" },
-    { label: "PROJECTS", href: "/projects", color: "bg-blue-500" },
-    { label: "SKILLS", href: "/skills", color: "bg-yellow-500" },
-    { label: "CV", href: "/cv", color: "bg-purple-500" },
-    { label: "CONTACT", href: "/contact", color: "bg-red-500" },
+    { label: "ABOUT", href: "/terminal/about", color: "bg-green-500" },
+    { label: "PROJECTS", href: "/terminal/projects", color: "bg-blue-500" },
+    { label: "SKILLS", href: "/terminal/skills", color: "bg-yellow-500" },
+    { label: "CV", href: "/terminal/cv", color: "bg-purple-500" },
+    { label: "CONTACT", href: "/terminal/contact", color: "bg-red-500" },
   ];
 
   return (
