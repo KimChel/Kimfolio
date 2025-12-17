@@ -17,14 +17,29 @@ interface CarroEntity {
   direction: "left" | "right";
 }
 
+interface NpcEntity {
+  sprite: AnimatedSprite;
+  body?: Matter.Body;
+  animations: {
+    idle: AnimatedSprite;
+    walk?: AnimatedSprite;
+    special: AnimatedSprite;
+  };
+  state: "idle" | "walk" | "special";
+  direction: "left" | "right";
+  speed: number;
+  minX: number;
+  maxX: number;
+}
+
 export default function Engine() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const appRef = useRef<Application | null>(null)
+  const appRef = useRef<Application | null>(null);
   useEffect(() => {
     const container = containerRef.current;
     if (!container!) return;
 
-    let isCancelled = false
+    let isCancelled = false;
 
     const initPixi = async () => {
       const app = new Application();
@@ -32,11 +47,11 @@ export default function Engine() {
       await app.init({
         resizeTo: container,
         backgroundAlpha: 0, // transparent so PNGs behind are visible
-        preference: "webgl"
+        preference: "webgl",
       });
 
       if (isCancelled) {
-        app.destroy({ removeView: true }, { children: true, texture: true })
+        app.destroy({ removeView: true }, { children: true, texture: true });
         return;
       }
 
@@ -76,7 +91,7 @@ export default function Engine() {
         carroSprite.play();
         carroSprite.anchor.set(0.5);
         carroSprite.eventMode = "static";
-        carroSprite.zIndex = 1;
+        carroSprite.zIndex = 2;
 
         const direction = Math.random() < 0.5 ? "left" : "right";
 
@@ -170,14 +185,87 @@ export default function Engine() {
       // ░░   Dev Sign Setup   ░░
       //
 
-      const devSign = new Sprite(
-        await Assets.load("/assets/dev_sign.png")
-      )
+      const devSign = new Sprite(await Assets.load("/assets/dev_sign.png"));
 
       devSign.anchor.set(0.5, 1);
       // devSign.x = container!.clientWidth * 0.615;
       // devSign.y = container!.clientHeight *0.48;
       devSign.scale.set(container!.clientWidth / 600);
+
+      //
+      // ░░   NPC SETUP   ░░
+      //
+
+      const npc_1_idle = await Assets.load("/assets/npc/npc1/idle.json");
+      const npc_1_walk = await Assets.load("/assets/npc/npc1/walk.json");
+      const npc_1_special = await Assets.load("/assets/npc/npc1/special.json");
+
+      const npc1Idle = new AnimatedSprite(npc_1_idle.animations.idle);
+      const npc1Walk = new AnimatedSprite(npc_1_walk.animations.walk);
+      const npc1Special = new AnimatedSprite(npc_1_special.animations.special);
+
+      [npc1Idle, npc1Walk, npc1Special].forEach((s: any) => {
+        s.anchor.set(0.5, 1);
+        s.animationSpeed = 1 / 10;
+        s.play();
+        s.visible = false;
+        s.zIndex = 1;
+        app.stage.addChild(s);
+      });
+
+      npc1Idle.visible = true;
+
+      //
+      // ░░   NPC SETUP OLDMAN   ░░
+      //
+
+      const npc_2_idle = await Assets.load("/assets/npc/npc2/idle.json");
+      const npc_2_special = await Assets.load("/assets/npc/npc2/special.json");
+
+      const npc2Idle = new AnimatedSprite(npc_2_idle.animations.idle);
+      const npc2Special = new AnimatedSprite(npc_2_special.animations.special);
+
+      [npc2Idle, npc2Special].forEach((s: any) => {
+        s.anchor.set(0.5, 1);
+        s.animationSpeed = 1 / 10;
+        s.play();
+        s.visible = false;
+        s.zIndex = 1;
+        app.stage.addChild(s);
+      });
+
+      npc2Idle.visible = true;
+
+      //
+      // ░░   NPC ENTITIES   ░░
+      //
+
+      const npc1: NpcEntity = {
+        sprite: npc1Idle,
+        animations: {
+          idle: npc1Idle,
+          walk: npc1Walk,
+          special: npc1Special,
+        },
+        state: "idle",
+        direction: Math.random() < 0.5 ? "left" : "right",
+        speed: 0.1,
+        minX: 0,
+        maxX: 0,
+      };
+
+      const npc2: NpcEntity = {
+        sprite: npc2Idle,
+        animations: {
+          idle: npc2Idle,
+          special: npc2Special,
+        },
+        state: "idle",
+        direction: "right",
+        speed: 0.1,
+        minX: 0,
+        maxX: 0,
+      };
 
       //
       // ░░   MATERIAL ENGINE   ░░
@@ -211,7 +299,7 @@ export default function Engine() {
       const dishRelX = 0.63;
       const dishRelY = 0.328;
 
-      const devSignRelX = 0.615
+      const devSignRelX = 0.615;
       const devSignRelY = 0.48;
 
       let lastCarroScale = 1;
@@ -226,12 +314,22 @@ export default function Engine() {
         const dishScale = container!.clientWidth / 600;
         const lightScale = container!.clientWidth / 600;
         const devSignScale = container!.clientWidth / 600;
+        const npc1Scale = container!.clientWidth / 800;
+        const npc2Scale = container!.clientWidth / 800;
 
         neonSprite.scale.set(neonScale);
         dishSprite.scale.set(dishScale);
         streetLightSprite1.scale.set(lightScale);
         streetLightSprite2.scale.set(lightScale);
-        devSign.scale.set(devSignScale)
+        devSign.scale.set(devSignScale);
+
+        Object.values(npc1.animations).forEach((state) => {
+          state.scale.set(npc1Scale);
+        });
+
+        Object.values(npc2.animations).forEach((state) => {
+          state.scale.set(npc2Scale);
+        });
 
         neonSprite.x = container!.clientWidth * neonRelX;
         neonSprite.y = container!.clientHeight * neonRelY;
@@ -247,6 +345,17 @@ export default function Engine() {
 
         devSign.x = container!.clientWidth * devSignRelX;
         devSign.y = container!.clientHeight * devSignRelY;
+
+        npc1.minX = container!.clientWidth * 0.35;
+        npc1.maxX = container!.clientWidth * 0.45;
+
+        npc2.minX = container!.clientWidth * 0.4;
+        npc2.maxX = container!.clientWidth * 0.5;
+
+        if (!npc1.sprite.x) {
+          npc1.sprite.x = npc1.minX;
+          npc1.sprite.y = container!.clientHeight * 0.88;
+        }
 
         // Update ground
 
@@ -270,6 +379,42 @@ export default function Engine() {
         });
 
         spawnRandomCarro();
+      }
+
+      //
+      // ░░   NPC STATE   ░░
+      //
+
+      function setNpcState(npc: NpcEntity, state: NpcEntity["state"]) {
+        if (npc.state === state) return;
+
+        const nextSprite = npc.animations[state];
+        if (!nextSprite) return; // state not available for this NPC
+
+        Object.values(npc.animations).forEach((animation) => {
+          animation.visible = false;
+        });
+
+        // Keep transform consistent when swapping animations
+        nextSprite.position.set(npc.sprite.x, npc.sprite.y);
+        nextSprite.scale.set(npc.sprite.scale.x, npc.sprite.scale.y);
+
+        npc.state = state;
+        npc.sprite = nextSprite;
+        npc.sprite.visible = true;
+      }
+
+      function randomNpc1State() {
+        const rand = Math.random();
+        if (rand < 0.6) setNpcState(npc1, "idle");
+        else if (rand < 0.9) setNpcState(npc1, "walk");
+        else setNpcState(npc1, "special");
+      }
+
+      function randomNpc2State() {
+        const rand = Math.random();
+        if (rand < 0.75) setNpcState(npc2, "idle");
+        else setNpcState(npc2, "special");
       }
 
       //
@@ -356,6 +501,15 @@ export default function Engine() {
             }
           }
 
+          if (npc1.state === "walk") {
+            const dir = npc1.direction === "left" ? -1 : 1;
+            npc1.sprite.x += dir * npc1.speed;
+
+            npc1.sprite.scale.x = Math.abs(npc1.sprite.scale.x) * dir;
+            if (npc1.sprite.x < npc1.minX) npc1.direction = "right";
+            if (npc1.sprite.x > npc1.maxX) npc1.direction = "left";
+          }
+
           Matter.Engine.update(engine, 16.666); // physics
 
           // Sync PIXI visual with physics
@@ -381,29 +535,33 @@ export default function Engine() {
         app.stage.addChild(dishSprite);
         app.stage.addChild(streetLightSprite1);
         app.stage.addChild(streetLightSprite2);
-        app.stage.addChild(devSign)
+        app.stage.addChild(devSign);
+        setInterval(() => {
+          randomNpc1State();
+          npc1.direction = Math.random() < 0.5 ? "left" : "right";
+        }, 4000);
+        setInterval(() => {
+          randomNpc2State();
+        }, 5000);
         setInterval(() => {
           if (activeCars.length < 3) {
             spawnRandomCarro();
           }
         }, 4000);
       }
+    };
 
-    }
-
-    initPixi()
-
+    initPixi();
 
     return () => {
       isCancelled = true;
 
       const app = appRef.current;
       if (app) {
-        if ((app as any)._customCleanup) (app as any)._customCleanup()
+        if ((app as any)._customCleanup) (app as any)._customCleanup();
 
         //destroy pipi
-        app.destroy({ removeView: true }, { children: true, texture: true })
-
+        app.destroy({ removeView: true }, { children: true, texture: true });
       }
     };
   }, []);
