@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaInstagram, FaGithub, FaLinkedin   } from "react-icons/fa6";
 
 export type FormData = {
   fname: string;
@@ -137,6 +138,17 @@ export default function ContactView(){
         <div className="w-[45%] border-t mt-4 border-rose-500"></div>
         <div className="w-[5%] text-rose-500 text-2xl">OR</div>
         <div className="w-[45%] border-t mt-4 border-rose-500"></div>
+      </div>
+      <div className="w-full flex flex-row items-center justify-center mt-7 gap-17">
+        <a href="https://github.com/KimChel" target="_blank">
+        <FaGithub className="text-rose-500 scale-300"/>
+        </a>
+        <a href="https://www.linkedin.com/in/kimon-heliotis/" target="_blank">
+        <FaLinkedin  className="text-rose-500 scale-300"/>
+        </a>
+        <a href="" target="_blank">
+        <FaInstagram className="text-rose-500 scale-300"/>
+        </a>
       </div>
     </div>
   );
