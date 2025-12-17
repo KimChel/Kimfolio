@@ -188,8 +188,6 @@ export default function Engine() {
       const devSign = new Sprite(await Assets.load("/assets/dev_sign.png"));
 
       devSign.anchor.set(0.5, 1);
-      // devSign.x = container!.clientWidth * 0.615;
-      // devSign.y = container!.clientHeight *0.48;
       devSign.scale.set(container!.clientWidth / 600);
 
       //
@@ -209,7 +207,7 @@ export default function Engine() {
         s.animationSpeed = 1 / 10;
         s.play();
         s.visible = false;
-        s.zIndex = 1;
+        s.zIndex = 2;
         app.stage.addChild(s);
       });
 
@@ -280,9 +278,9 @@ export default function Engine() {
       //
 
       const ground = Matter.Bodies.rectangle(
-        groundWidth + 500,
+        groundWidth + 1000,
         container!.clientHeight - 100,
-        groundWidth + 500,
+        groundWidth + 1000,
         20,
         { isStatic: true }
       );
@@ -352,14 +350,19 @@ export default function Engine() {
         npc2.minX = container!.clientWidth * 0.4;
         npc2.maxX = container!.clientWidth * 0.5;
 
-        if (!npc1.sprite.x) {
+        // if (!npc1.sprite.x) {
           npc1.sprite.x = npc1.minX;
           npc1.sprite.y = container!.clientHeight * 0.88;
-        }
+        // }
+
+        // if (!npc2.sprite.x) {
+          npc2.sprite.x = npc2.minX;
+          npc2.sprite.y = container!.clientHeight
+            * 0.88;
+        // }
 
         // Update ground
-
-        const newGroundWidth = container!.clientWidth;
+        const newGroundWidth = container!.clientWidth + 600;
 
         const groundScaleX = newGroundWidth / groundWidth;
         Matter.Body.scale(ground, groundScaleX, 1);
@@ -522,7 +525,7 @@ export default function Engine() {
           const car = activeCars[i];
           const x = car.body.position.x;
 
-          if (x < -400 || x > container!.clientWidth + 800) {
+          if (x < -400 || x > container!.clientWidth + 400) {
             // Remove car
             Matter.World.remove(engine.world, car.body);
             app.stage.removeChild(car.sprite);
@@ -547,7 +550,7 @@ export default function Engine() {
           if (activeCars.length < 3) {
             spawnRandomCarro();
           }
-        }, 4000);
+        }, 6000);
       }
     };
 
