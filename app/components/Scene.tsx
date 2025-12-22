@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { use, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Engine from "./Engine";
 import Menu from "./Menu"
@@ -9,6 +9,8 @@ import Menu from "./Menu"
 export default function Scene() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const [engineReady, setEngineReady] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -34,17 +36,17 @@ export default function Scene() {
        bg-gray-400/10 
         border-10 border-blue-600/10 rounded-xl
       ">      */}
-       <div className="absolute top-[25%] right-[10%] w-2xl sm:w-[20%] h-150 z-50
+      <div className="absolute top-[25%] right-[10%] w-2xl sm:w-[20%] h-150 z-50
 
       ">
-        <div className="absolute opacity-85 font-(--font-pixel) font-[700] text-3xl sm:text-sm">
+        {/* <div className="absolute opacity-85 font-(--font-pixel) font-[700] text-3xl sm:text-sm">
 
           <h1 className="">Retro vibes</h1>
           <div className="mt-7">
 
             <span className="">Grab and throw the cars now! {'>'}{':'}{')'}</span>
           </div>
-        </div>
+        </div> */}
       </div>
       <motion.div
         style={{
@@ -79,8 +81,18 @@ export default function Scene() {
               }}
             />
 
-            <div className="absolute inset-0 z-10 pointer-events-auto">
-              <Engine />
+            <div className="absolute inset-0 z-10">
+              {!engineReady && (
+                <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 font-(--font-pixel) text-xl text-white pointer-events-auto">
+                  Loading... {Math.round(loadProgress * 100)}%
+                </div>
+              )}
+              <div className="absolute inset-0 pointer-events-auto">
+                <Engine
+                  onLoadProgress={setLoadProgress}
+                  onLoaded={() => setEngineReady(true)}
+                />
+              </div>
             </div>
           </div>
         </div>

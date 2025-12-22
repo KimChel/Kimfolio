@@ -1,14 +1,7 @@
 "use client";
-import {
-  Application,
-  AnimatedSprite,
-  Assets,
-  TextureStyle,
-  Sprite,
-} from "pixi.js";
+import { Application, AnimatedSprite, Assets, Sprite, TextureStyle } from "pixi.js";
 import Matter from "matter-js";
 import { useEffect, useRef } from "react";
-import { canvas, s } from "framer-motion/client";
 
 interface CarroEntity {
   sprite: AnimatedSprite;
@@ -32,14 +25,33 @@ interface NpcEntity {
   maxX: number;
 }
 
-export default function Engine() {
+type EngineProps = {
+  onLoadProgress?: (progress: number) => void;
+  onLoaded?: () => void;
+};
+
+const ASSET_URLS = [
+  "/assets/carro.json",
+  "/assets/neonFrames/neon.json",
+  "/assets/dishFrames/dish.json",
+  "/assets/street_lights.png",
+  "/assets/dev_sign.png",
+  "/assets/npc/npc1/idle.json",
+  "/assets/npc/npc1/walk.json",
+  "/assets/npc/npc1/special.json",
+  "/assets/npc/npc2/idle.json",
+  "/assets/npc/npc2/special.json",
+] as const;
+
+export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const appRef = useRef<Application | null>(null);
   useEffect(() => {
     const container = containerRef.current;
-    if (!container!) return;
+    if (!container) return;
 
     let isCancelled = false;
+
 
     const initPixi = async () => {
       const app = new Application();
@@ -59,6 +71,8 @@ export default function Engine() {
 
       container.appendChild(app.canvas);
 
+      onLoadProgress?.(0);
+
       //
       // ░░   PIXI APP   ░░
       //
@@ -73,7 +87,19 @@ export default function Engine() {
       //
       // ░░   Carro SETUP   ░░
       //
-      const carroSheet = await Assets.load("/assets/carro.json");
+      const loadedAssets = (await Assets.load(
+        [...ASSET_URLS],
+        (progress) => {
+          if (!isCancelled) onLoadProgress?.(progress);
+        }
+      )) as Record<string, any>;
+
+      if (isCancelled) {
+        app.destroy({ removeView: true }, { children: true, texture: true });
+        return;
+      }
+
+      const carroSheet = loadedAssets["/assets/carro.json"];
 
       const carroColors = ["car_yellow", "car_blue", "car_magenta", "car_red"];
 
@@ -138,14 +164,14 @@ export default function Engine() {
       // ░░   Neon sign Setup   ░░
       //
 
-      const neonSheet = await Assets.load("/assets/neonFrames/neon.json");
+      const neonSheet = loadedAssets["/assets/neonFrames/neon.json"];
       const neonFrames = neonSheet.animations!["neon"];
       const neonSprite = new AnimatedSprite(neonFrames);
 
       //
       // ░░   Dish Setup   ░░
       //
-      const dishSheet = await Assets.load("/assets/dishFrames/dish.json");
+      const dishSheet = loadedAssets["/assets/dishFrames/dish.json"];
       const dishFrames = dishSheet.animations["dish"];
       const dishSprite = new AnimatedSprite(dishFrames);
 
@@ -159,13 +185,11 @@ export default function Engine() {
       // ░░   Street Lights Setup   ░░
       //
 
-      const streetLightSprite1 = new Sprite(
-        await Assets.load("/assets/street_lights.png")
-      );
+      const streetLightTexture = loadedAssets["/assets/street_lights.png"];
 
-      const streetLightSprite2 = new Sprite(
-        await Assets.load("/assets/street_lights.png")
-      );
+      const streetLightSprite1 = new Sprite(streetLightTexture);
+
+      const streetLightSprite2 = new Sprite(streetLightTexture);
 
       streetLightSprite1.anchor.set(0.5, 1);
       streetLightSprite1.x = container!.clientWidth * 0.303;
@@ -185,7 +209,8 @@ export default function Engine() {
       // ░░   Dev Sign Setup   ░░
       //
 
-      const devSign = new Sprite(await Assets.load("/assets/dev_sign.png"));
+      const devSignTexture = loadedAssets["/assets/dev_sign.png"];
+      const devSign = new Sprite(devSignTexture);
 
       devSign.anchor.set(0.5, 1);
       devSign.scale.set(container!.clientWidth / 600);
@@ -194,9 +219,9 @@ export default function Engine() {
       // ░░   NPC SETUP   ░░
       //
 
-      const npc_1_idle = await Assets.load("/assets/npc/npc1/idle.json");
-      const npc_1_walk = await Assets.load("/assets/npc/npc1/walk.json");
-      const npc_1_special = await Assets.load("/assets/npc/npc1/special.json");
+      const npc_1_idle = loadedAssets["/assets/npc/npc1/idle.json"];
+      const npc_1_walk = loadedAssets["/assets/npc/npc1/walk.json"];
+      const npc_1_special = loadedAssets["/assets/npc/npc1/special.json"];
 
       const npc1Idle = new AnimatedSprite(npc_1_idle.animations.idle);
       const npc1Walk = new AnimatedSprite(npc_1_walk.animations.walk);
@@ -217,8 +242,8 @@ export default function Engine() {
       // ░░   NPC SETUP OLDMAN   ░░
       //
 
-      const npc_2_idle = await Assets.load("/assets/npc/npc2/idle.json");
-      const npc_2_special = await Assets.load("/assets/npc/npc2/special.json");
+      const npc_2_idle = loadedAssets["/assets/npc/npc2/idle.json"];
+      const npc_2_special = loadedAssets["/assets/npc/npc2/special.json"];
 
       const npc2Idle = new AnimatedSprite(npc_2_idle.animations.idle);
       const npc2Special = new AnimatedSprite(npc_2_special.animations.special);
@@ -351,14 +376,14 @@ export default function Engine() {
         npc2.maxX = container!.clientWidth * 0.5;
 
         // if (!npc1.sprite.x) {
-          npc1.sprite.x = npc1.minX;
-          npc1.sprite.y = container!.clientHeight * 0.88;
+        npc1.sprite.x = npc1.minX;
+        npc1.sprite.y = container!.clientHeight * 0.88;
         // }
 
         // if (!npc2.sprite.x) {
-          npc2.sprite.x = npc2.minX;
-          npc2.sprite.y = container!.clientHeight
-            * 0.88;
+        npc2.sprite.x = npc2.minX;
+        npc2.sprite.y = container!.clientHeight
+          * 0.88;
         // }
 
         // Update ground
@@ -552,6 +577,9 @@ export default function Engine() {
           }
         }, 6000);
       }
+
+      onLoadProgress?.(1);
+      onLoaded?.();
     };
 
     initPixi();
