@@ -1,0 +1,22 @@
+{
+  "frames": {
+    "walk-0": { "frame": { "x": 0, "y": 0, "w": 48, "h": 48 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 }, "sourceSize": { "w": 48, "h": 48 }, "duration": 120 },
+    "walk-1": { "frame": { "x": 48, "y": 0, "w": 48, "h": 48 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 }, "sourceSize": { "w": 48, "h": 48 }, "duration": 120 },
+    "walk-2": { "frame": { "x": 96, "y": 0, "w": 48, "h": 48 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 }, "sourceSize": { "w": 48, "h": 48 }, "duration": 120 },
+    "walk-3": { "frame": { "x": 144, "y": 0, "w": 48, "h": 48 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 }, "sourceSize": { "w": 48, "h": 48 }, "duration": 120 },
+    "walk-4": { "frame": { "x": 192, "y": 0, "w": 48, "h": 48 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 }, "sourceSize": { "w": 48, "h": 48 }, "duration": 120 },
+    "walk-5": { "frame": { "x": 240, "y": 0, "w": 48, "h": 48 }, "rotated": false, "trimmed": false, "spriteSourceSize": { "x": 0, "y": 0, "w": 48, "h": 48 }, "sourceSize": { "w": 48, "h": 48 }, "duration": 120 }
+  },
+  "animations": {
+    "walk": ["walk-0", "walk-1", "walk-2", "walk-3", "walk-4", "walk-5"]
+  },
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "version": "1.3.x",
+    "image": "walk.png",
+    "format": "RGBA8888",
+    "size": { "w": 288, "h": 48 },
+    "scale": "1",
+    "renderMode": "nearest"
+  }
+}
