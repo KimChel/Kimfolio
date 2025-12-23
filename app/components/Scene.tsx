@@ -4,7 +4,10 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Engine from "./Engine";
-import Menu from "./Menu"
+import Menu from "./Menu";
+import { WipBanner } from "./Banner";
+import { QuestLog } from "./QuestLog";
+import { ControlsHUD } from "./Controls";
 
 export default function Scene() {
   const x = useMotionValue(0);
@@ -29,25 +32,14 @@ export default function Scene() {
 
   return (
     <div className="absolute inset-0 overflow-hidden">
+      <WipBanner />
       <nav className="absolute top-4 right-4 z-50 text-left sm:scale-80">
         <Menu />
       </nav>
-      {/* <div className="absolute top-[25%] right-[7%] w-xl h-150 z-50
-       bg-gray-400/10 
-        border-10 border-blue-600/10 rounded-xl
-      ">      */}
-      <div className="absolute top-[25%] right-[10%] w-2xl sm:w-[20%] h-150 z-50
-
-      ">
-        {/* <div className="absolute opacity-85 font-(--font-pixel) font-[700] text-3xl sm:text-sm">
-
-          <h1 className="">Retro vibes</h1>
-          <div className="mt-7">
-
-            <span className="">Grab and throw the cars now! {'>'}{':'}{')'}</span>
-          </div>
-        </div> */}
+      <div className="absolute top-4 left-4 z-[60] sm:scale-90">
+        <QuestLog />
       </div>
+      <ControlsHUD/>
       <motion.div
         style={{
           translateX: useTransform(x, (val) => val * 1.5),

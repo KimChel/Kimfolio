@@ -1,5 +1,11 @@
 "use client";
-import { Application, AnimatedSprite, Assets, Sprite, TextureStyle } from "pixi.js";
+import {
+  Application,
+  AnimatedSprite,
+  Assets,
+  Sprite,
+  TextureStyle,
+} from "pixi.js";
 import Matter from "matter-js";
 import { useEffect, useRef } from "react";
 
@@ -16,13 +22,17 @@ interface NpcEntity {
   animations: {
     idle: AnimatedSprite;
     walk?: AnimatedSprite;
-    special: AnimatedSprite;
+    special?: AnimatedSprite;
   };
   state: "idle" | "walk" | "special";
   direction: "left" | "right";
   speed: number;
   minX: number;
   maxX: number;
+  minXRel?: number;
+  maxXRel?: number;
+  xRel?: number;
+  yRel?: number;
 }
 
 type EngineProps = {
@@ -35,12 +45,21 @@ const ASSET_URLS = [
   "/assets/neonFrames/neon.json",
   "/assets/dishFrames/dish.json",
   "/assets/street_lights.png",
+  "/assets/street_lamp.png",
   "/assets/dev_sign.png",
   "/assets/npc/npc1/idle.json",
   "/assets/npc/npc1/walk.json",
   "/assets/npc/npc1/special.json",
   "/assets/npc/npc2/idle.json",
   "/assets/npc/npc2/special.json",
+  "/assets/npc/npc3/idle.json",
+  "/assets/npc/npc3/walk.json",
+  "/assets/npc/npc3/special.json",
+  "/assets/npc/npc4/idle.json",
+  "/assets/npc/npc4/walk.json",
+  "/assets/npc/npc4/special.json",
+  "/assets/npc/npc5/idle.json",
+  "/assets/npc/npc5/special.json",
 ] as const;
 
 export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
@@ -51,7 +70,6 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
     if (!container) return;
 
     let isCancelled = false;
-
 
     const initPixi = async () => {
       const app = new Application();
@@ -74,18 +92,18 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       onLoadProgress?.(0);
 
       //
-      // ░░   PIXI APP   ░░
+      // ƒ-`ƒ-`   PIXI APP   ƒ-`ƒ-`
       //
 
       TextureStyle.defaultOptions.scaleMode = "nearest"; //pixelated rendering
       app.stage.sortableChildren = true; // enable z-index ordering
 
       //
-      // ░░   SPRITE SETUP   ░░
+      // ƒ-`ƒ-`   SPRITE SETUP   ƒ-`ƒ-`
       //
 
       //
-      // ░░   Carro SETUP   ░░
+      // ƒ-`ƒ-`   Carro SETUP   ƒ-`ƒ-`
       //
       const loadedAssets = (await Assets.load(
         [...ASSET_URLS],
@@ -131,6 +149,9 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         carroSprite.y = startY;
         carroSprite.scale.set(container!.clientWidth / 1920);
 
+        const groundMask =
+          direction === "left" ? leftGroundCategory : rightGroundCategory;
+
         const carroBody = Matter.Bodies.rectangle(
           carroSprite.x,
           carroSprite.y,
@@ -139,7 +160,7 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
           {
             restitution: 0.1,
             friction: 0.4,
-            collisionFilter: { group: -1 },
+            collisionFilter: { group: -1, mask: groundMask },
           }
         );
 
@@ -161,7 +182,7 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       }
 
       //
-      // ░░   Neon sign Setup   ░░
+      // ƒ-`ƒ-`   Neon sign Setup   ƒ-`ƒ-`
       //
 
       const neonSheet = loadedAssets["/assets/neonFrames/neon.json"];
@@ -169,7 +190,7 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       const neonSprite = new AnimatedSprite(neonFrames);
 
       //
-      // ░░   Dish Setup   ░░
+      // ƒ-`ƒ-`   Dish Setup   ƒ-`ƒ-`
       //
       const dishSheet = loadedAssets["/assets/dishFrames/dish.json"];
       const dishFrames = dishSheet.animations["dish"];
@@ -182,14 +203,17 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       dishSprite.play();
 
       //
-      // ░░   Street Lights Setup   ░░
+      // ƒ-`ƒ-`   Street Lights Setup   ƒ-`ƒ-`
       //
 
       const streetLightTexture = loadedAssets["/assets/street_lights.png"];
+      const streetLampTexture = loadedAssets["/assets/street_lamp.png"]
 
       const streetLightSprite1 = new Sprite(streetLightTexture);
-
+      const streetlampSprite1 = new Sprite(streetLampTexture)
+      
       const streetLightSprite2 = new Sprite(streetLightTexture);
+      const streetlampSprite2 = new Sprite(streetLampTexture)
 
       streetLightSprite1.anchor.set(0.5, 1);
       streetLightSprite1.x = container!.clientWidth * 0.303;
@@ -198,6 +222,12 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       streetLightSprite1.alpha = 0.4;
       streetLightSprite1.zIndex = 10;
 
+      streetlampSprite1.anchor.set(0.5, 1);
+      streetlampSprite1.x = container!.clientWidth * 0.312;
+      streetlampSprite1.y = container!.clientHeight * 0.898;
+      streetlampSprite1.scale.set(container!.clientWidth / 600);
+      streetlampSprite1.zIndex = 3;
+
       streetLightSprite2.anchor.set(0.5, 1);
       streetLightSprite2.x = container!.clientWidth * 0.725;
       streetLightSprite2.y = container!.clientHeight * 1.013;
@@ -205,8 +235,14 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       streetLightSprite2.alpha = 0.4;
       streetLightSprite2.zIndex = 10;
 
+      streetlampSprite2.anchor.set(0.5, 1);
+      streetlampSprite2.x = container!.clientWidth * 0.733;
+      streetlampSprite2.y = container!.clientHeight * 0.900;
+      streetlampSprite2.scale.set(container!.clientWidth / 600);
+      streetlampSprite2.zIndex = 3;
+
       //
-      // ░░   Dev Sign Setup   ░░
+      // ƒ-`ƒ-`   Dev Sign Setup   ƒ-`ƒ-`
       //
 
       const devSignTexture = loadedAssets["/assets/dev_sign.png"];
@@ -216,104 +252,161 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       devSign.scale.set(container!.clientWidth / 600);
 
       //
-      // ░░   NPC SETUP   ░░
+      // ƒ-`ƒ-`   NPC SETUP   ƒ-`ƒ-`
       //
 
-      const npc_1_idle = loadedAssets["/assets/npc/npc1/idle.json"];
-      const npc_1_walk = loadedAssets["/assets/npc/npc1/walk.json"];
-      const npc_1_special = loadedAssets["/assets/npc/npc1/special.json"];
+      function loadNpcAnimations(
+        basePath: string,
+        hasWalk = false,
+        hasSpecial = false
+      ) {
+        const idle = new AnimatedSprite(
+          loadedAssets[`${basePath}/idle.json`].animations.idle
+        );
 
-      const npc1Idle = new AnimatedSprite(npc_1_idle.animations.idle);
-      const npc1Walk = new AnimatedSprite(npc_1_walk.animations.walk);
-      const npc1Special = new AnimatedSprite(npc_1_special.animations.special);
+        const animations: NpcEntity["animations"] = { idle };
 
-      [npc1Idle, npc1Walk, npc1Special].forEach((s: any) => {
-        s.anchor.set(0.5, 1);
-        s.animationSpeed = 1 / 10;
-        s.play();
-        s.visible = false;
-        s.zIndex = 2;
-        app.stage.addChild(s);
-      });
+        if (hasWalk) {
+          animations.walk = new AnimatedSprite(
+            loadedAssets[`${basePath}/walk.json`].animations.walk
+          );
+        }
 
-      npc1Idle.visible = true;
+        if (hasSpecial) {
+          animations.special = new AnimatedSprite(
+            loadedAssets[`${basePath}/special.json`].animations.special
+          );
+        }
 
-      //
-      // ░░   NPC SETUP OLDMAN   ░░
-      //
+        Object.values(animations).forEach((s: AnimatedSprite | undefined) => {
+          if (!s) return;
+          s.anchor.set(0.5, 1);
+          s.animationSpeed = 1 / 10;
+          s.play();
+          s.visible = false;
+          s.zIndex = 2;
+          app.stage.addChild(s);
+        });
 
-      const npc_2_idle = loadedAssets["/assets/npc/npc2/idle.json"];
-      const npc_2_special = loadedAssets["/assets/npc/npc2/special.json"];
+        animations.idle.visible = true;
 
-      const npc2Idle = new AnimatedSprite(npc_2_idle.animations.idle);
-      const npc2Special = new AnimatedSprite(npc_2_special.animations.special);
+        return animations;
+      }
 
-      [npc2Idle, npc2Special].forEach((s: any) => {
-        s.anchor.set(0.5, 1);
-        s.animationSpeed = 1 / 10;
-        s.play();
-        s.visible = false;
-        s.zIndex = 1;
-        app.stage.addChild(s);
-      });
-
-      npc2Idle.visible = true;
-
-      //
-      // ░░   NPC ENTITIES   ░░
-      //
-
-      const npc1: NpcEntity = {
-        sprite: npc1Idle,
-        animations: {
-          idle: npc1Idle,
-          walk: npc1Walk,
-          special: npc1Special,
-        },
-        state: "idle",
-        direction: Math.random() < 0.5 ? "left" : "right",
-        speed: 0.1,
-        minX: 0,
-        maxX: 0,
+      type NpcOptions = {
+        speed?: number;
+        minX?: number;
+        maxX?: number;
+        x?: number;
+        y?: number;
+        direction?: "left" | "right";
       };
 
-      const npc2: NpcEntity = {
-        sprite: npc2Idle,
-        animations: {
-          idle: npc2Idle,
-          special: npc2Special,
-        },
-        state: "idle",
-        direction: "right",
-        speed: 0.1,
-        minX: 0,
-        maxX: 0,
-      };
+      function createNpc(
+        animations: NpcEntity["animations"],
+        options: NpcOptions = {}
+      ): NpcEntity {
+        return {
+          sprite: animations.idle,
+          animations,
+          state: "idle",
+          direction:
+            options.direction ?? (Math.random() < 0.5 ? "left" : "right"),
+          speed: options.speed ?? 0.1,
+          minX: 0,
+          maxX: 0,
+          minXRel: options.minX,
+          maxXRel: options.maxX,
+          xRel: options.x,
+          yRel: options.y,
+        };
+      }
+
+      const allNpcs: NpcEntity[] = [];
+
+      function addNpc(
+        animations: NpcEntity["animations"],
+        options: NpcOptions = {}
+      ) {
+        const npc = createNpc(animations, options);
+        allNpcs.push(npc);
+        return npc;
+      }
+
+      const npc1Animations = loadNpcAnimations(
+        "/assets/npc/npc1",
+        true,
+        true
+      );
+
+      const npc1Options:NpcOptions = {
+        x: 500, y:524
+      }
+      
+      const npc2Animations = loadNpcAnimations(
+        "/assets/npc/npc2",
+        false,
+        true
+      );
+      const npc3Animations = loadNpcAnimations(
+        "/assets/npc/npc3",
+        true,
+        true
+      );
+      const npc4Animations = loadNpcAnimations(
+        "/assets/npc/npc4",
+        true,
+        true
+      );
+      const npc5Animations = loadNpcAnimations(
+        "/assets/npc/npc5",
+        false,
+        true
+      );
+
+      addNpc(npc1Animations, npc1Options);
+      addNpc(npc2Animations);
+      addNpc(npc3Animations);
+      addNpc(npc4Animations);
+      addNpc(npc5Animations);
 
       //
-      // ░░   MATERIAL ENGINE   ░░
+      // ƒ-`ƒ-`   MATERIAL ENGINE   ƒ-`ƒ-`
       //
 
       const engine = Matter.Engine.create();
       engine.gravity.y = 0.4;
       let groundWidth = container!.clientWidth;
 
+      const leftGroundCategory = Matter.Body.nextCategory();
+      const rightGroundCategory = Matter.Body.nextCategory();
+      const groundVerticalOffset = 40;
+
       //
-      // ░░   GROUND COLLIDER   ░░
+      // ƒ-`ƒ-`   GROUND COLLIDER   ƒ-`ƒ-`
       //
 
       const ground = Matter.Bodies.rectangle(
         groundWidth + 1000,
-        container!.clientHeight - 100,
+        container!.clientHeight - 80,
         groundWidth + 1000,
         20,
-        { isStatic: true }
+        { isStatic: true, collisionFilter: { category: leftGroundCategory } }
+      );
+
+      const lowerGround = Matter.Bodies.rectangle(
+        groundWidth + 1000,
+        container!.clientHeight - 100 + groundVerticalOffset,
+        groundWidth + 1000,
+        20,
+        { isStatic: true, collisionFilter: { category: rightGroundCategory } }
       );
 
       Matter.World.add(engine.world, ground);
+      Matter.World.add(engine.world, lowerGround);
 
       //
-      // ░░   RESPONSIVE LOGIC   ░░
+      // ƒ-`ƒ-`   RESPONSIVE LOGIC   ƒ-`ƒ-`
       //
 
       const neonRelX = 0.4;
@@ -337,22 +430,14 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         const dishScale = container!.clientWidth / 600;
         const lightScale = container!.clientWidth / 600;
         const devSignScale = container!.clientWidth / 600;
-        const npc1Scale = container!.clientWidth / 800;
-        const npc2Scale = container!.clientWidth / 800;
+        const npcScale48 = container!.clientWidth / 800;
+        const npcScale32 = container!.clientWidth / 1000;
 
         neonSprite.scale.set(neonScale);
         dishSprite.scale.set(dishScale);
         streetLightSprite1.scale.set(lightScale);
         streetLightSprite2.scale.set(lightScale);
         devSign.scale.set(devSignScale);
-
-        Object.values(npc1.animations).forEach((state) => {
-          state.scale.set(npc1Scale);
-        });
-
-        Object.values(npc2.animations).forEach((state) => {
-          state.scale.set(npc2Scale);
-        });
 
         neonSprite.x = container!.clientWidth * neonRelX;
         neonSprite.y = container!.clientHeight * neonRelY;
@@ -369,33 +454,44 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         devSign.x = container!.clientWidth * devSignRelX;
         devSign.y = container!.clientHeight * devSignRelY;
 
-        npc1.minX = container!.clientWidth * 0.35;
-        npc1.maxX = container!.clientWidth * 0.45;
+        allNpcs.forEach((npc, index) => {
+          const scale = index >= 6 ? npcScale32 : npcScale48;
 
-        npc2.minX = container!.clientWidth * 0.4;
-        npc2.maxX = container!.clientWidth * 0.5;
+          Object.values(npc.animations).forEach((a) => {
+            a?.scale.set(scale);
+          });
 
-        // if (!npc1.sprite.x) {
-        npc1.sprite.x = npc1.minX;
-        npc1.sprite.y = container!.clientHeight * 0.88;
-        // }
+          const fallbackMinRel = 0.3 + index * 0.03;
+          const minXRel = npc.minXRel ?? fallbackMinRel;
+          const maxXRel = npc.maxXRel ?? minXRel + 0.08;
 
-        // if (!npc2.sprite.x) {
-        npc2.sprite.x = npc2.minX;
-        npc2.sprite.y = container!.clientHeight
-          * 0.88;
-        // }
+          npc.minX =
+            minXRel > 1 ? minXRel : container!.clientWidth * minXRel;
+          npc.maxX =
+            maxXRel > 1 ? maxXRel : container!.clientWidth * maxXRel;
+
+          const xRel = npc.xRel ?? minXRel;
+          const yRel = npc.yRel ?? 0.88;
+
+          npc.sprite.x = xRel > 1 ? xRel : container!.clientWidth * xRel;
+          npc.sprite.y = yRel > 1 ? yRel : container!.clientHeight * yRel;
+        });
 
         // Update ground
         const newGroundWidth = container!.clientWidth + 600;
 
         const groundScaleX = newGroundWidth / groundWidth;
         Matter.Body.scale(ground, groundScaleX, 1);
+        Matter.Body.scale(lowerGround, groundScaleX, 1);
         groundWidth = newGroundWidth;
 
         Matter.Body.setPosition(ground, {
           x: newGroundWidth / 2,
           y: container!.clientHeight - 50,
+        });
+        Matter.Body.setPosition(lowerGround, {
+          x: newGroundWidth / 2,
+          y: container!.clientHeight - 50 + groundVerticalOffset,
         });
 
         const scaleRatio = carroScale / lastCarroScale;
@@ -410,7 +506,7 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       }
 
       //
-      // ░░   NPC STATE   ░░
+      // ƒ-`ƒ-`   NPC STATE   ƒ-`ƒ-`
       //
 
       function setNpcState(npc: NpcEntity, state: NpcEntity["state"]) {
@@ -420,7 +516,7 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         if (!nextSprite) return; // state not available for this NPC
 
         Object.values(npc.animations).forEach((animation) => {
-          animation.visible = false;
+          if (animation) animation.visible = false;
         });
 
         // Keep transform consistent when swapping animations
@@ -432,21 +528,8 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         npc.sprite.visible = true;
       }
 
-      function randomNpc1State() {
-        const rand = Math.random();
-        if (rand < 0.6) setNpcState(npc1, "idle");
-        else if (rand < 0.9) setNpcState(npc1, "walk");
-        else setNpcState(npc1, "special");
-      }
-
-      function randomNpc2State() {
-        const rand = Math.random();
-        if (rand < 0.75) setNpcState(npc2, "idle");
-        else setNpcState(npc2, "special");
-      }
-
       //
-      // ░░   DRAGGING LOGIC   ░░
+      // ƒ-`ƒ-`   DRAGGING LOGIC   ƒ-`ƒ-`
       //
 
       function addDraggingToCar(car: CarroEntity) {
@@ -516,12 +599,14 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
 
         activeCars.forEach((car) => {
           if (!car.dragging) {
-            const speed = 1;
+            const speed = Math.floor(Math.random() * (2 - 0.5 + 1) + 0.5);
             if (car.direction === "left") {
               car.sprite.scale.x = -Math.abs(car.sprite.scale.x);
             }
 
-            if (Matter.Collision.collides(car.body, ground)) {
+            const targetGround = car.direction === "left" ? ground : lowerGround;
+
+            if (Matter.Collision.collides(car.body, targetGround)) {
               Matter.Body.setVelocity(car.body, {
                 x: car.direction === "left" ? -speed : speed,
                 y: car.body.velocity.y,
@@ -529,14 +614,16 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
             }
           }
 
-          if (npc1.state === "walk") {
-            const dir = npc1.direction === "left" ? -1 : 1;
-            npc1.sprite.x += dir * npc1.speed;
+          allNpcs.forEach((npc) => {
+            if (npc.state === "walk" && npc.animations.walk) {
+              const dir = npc.direction === "left" ? -1 : 1;
+              npc.sprite.x += dir * npc.speed;
+              npc.sprite.scale.x = Math.abs(npc.sprite.scale.x) * dir;
 
-            npc1.sprite.scale.x = Math.abs(npc1.sprite.scale.x) * dir;
-            if (npc1.sprite.x < npc1.minX) npc1.direction = "right";
-            if (npc1.sprite.x > npc1.maxX) npc1.direction = "left";
-          }
+              if (npc.sprite.x < npc.minX) npc.direction = "right";
+              if (npc.sprite.x > npc.maxX) npc.direction = "left";
+            }
+          });
 
           Matter.Engine.update(engine, 16.666); // physics
 
@@ -562,15 +649,18 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         app.stage.addChild(neonSprite);
         app.stage.addChild(dishSprite);
         app.stage.addChild(streetLightSprite1);
+        app.stage.addChild(streetlampSprite1)
         app.stage.addChild(streetLightSprite2);
+        app.stage.addChild(streetlampSprite2)
         app.stage.addChild(devSign);
         setInterval(() => {
-          randomNpc1State();
-          npc1.direction = Math.random() < 0.5 ? "left" : "right";
+          allNpcs.forEach((npc) => {
+            const r = Math.random();
+            if (r < 0.6) setNpcState(npc, "idle");
+            else if (r < 0.85 && npc.animations.walk) setNpcState(npc, "walk");
+            else if (npc.animations.special) setNpcState(npc, "special");
+          });
         }, 4000);
-        setInterval(() => {
-          randomNpc2State();
-        }, 5000);
         setInterval(() => {
           if (activeCars.length < 3) {
             spawnRandomCarro();
