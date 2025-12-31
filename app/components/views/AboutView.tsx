@@ -5,7 +5,8 @@ import Typewriter from "typewriter-effect";
 export default function AboutView() {
   const contentString = `
 [+] init kimon.bio
-> Greetings. I am Kimon, a Full Stack Software Engineer currently bridging my professional life between freelance web development and mandated military service.
+> Greetings. I am Kimon, a Full Stack Software Engineer currenty working from Athens, Greece. I have a Bachelor's Degree in Computer Science and Telecommunications from the University of Athens, along with a Msc in Security, Big Data and Telecommunications.
+> Currently building large-scale applications for the Hellenic Navy.
 
 [+] career.timeline
 > Hellenic Navy / Mandatory Service (Current)
