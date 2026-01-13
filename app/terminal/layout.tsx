@@ -1,7 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { CSSProperties, useEffect, useState } from "react";
 import {
   CARTRIDGE_THEMES,
   DEFAULT_THEME,
@@ -10,6 +10,7 @@ import {
 import BackButton from "../components/BackButton";
 import Menu from "../components/Menu";
 import TerminalMenu from "../components/TerminalMenu";
+import useWindowResize from "../hooks/useWindowResize";
 
 export default function TerminalLayout({
   children,
@@ -17,10 +18,56 @@ export default function TerminalLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [windowWidth, windowHeight] = useWindowResize();
+
+  const imageAspectRatio = 600 / 350;
+  const windowAspectRatio = windowWidth / windowHeight;
+
+  let imageWidth: number,
+    imageHeight: number,
+    imageTop: number,
+    imageLeft: number;
+
+  if (windowAspectRatio > imageAspectRatio) {
+    imageHeight = windowHeight;
+    imageWidth = imageHeight * imageAspectRatio;
+    imageTop = 0;
+    imageLeft = (windowWidth - imageWidth) / 2;
+  } else {
+    imageWidth = windowWidth;
+    imageHeight = imageWidth / imageAspectRatio;
+    imageLeft = 0;
+    imageTop = (windowHeight - imageHeight) / 2;
+  }
+
+  const contentStyle: CSSProperties = {
+    position: "absolute",
+    top: `${imageTop + imageHeight * (86 / 350)}px`,
+    left: `${imageLeft + imageWidth * (157 / 600)}px`,
+    width: `${imageWidth * (284 / 600)}px`,
+    height: `${imageHeight * (201 / 350)}px`,
+  };
 
   const currentTheme =
     CARTRIDGE_THEMES[pathname as TerminalPath] || DEFAULT_THEME;
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const href = e.dataTransfer.getData("text/plain");
+    if (href && pathname !== href) {
+      const audio = document.getElementById(
+        "cassette-insert-sound"
+      ) as HTMLAudioElement;
+      audio?.play();
+      router.push(href);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -37,6 +84,7 @@ export default function TerminalLayout({
           backgroundSize: "cover",
           backgroundPosition: "center",
           imageRendering: "pixelated",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <nav className="absolute top-4 left-4 z-50 sm:scale-80">
@@ -71,10 +119,17 @@ export default function TerminalLayout({
             </div>
           </div>
         ) : (
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-[25%] left-[12%] right-[12%] bottom-[20%] flex flex-col items-center justify-center p-4">
+          <div
+            className="absolute inset-0 overflow-hidden"
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
+            <div
+              style={contentStyle}
+              className="flex flex-col items-center justify-center crt"
+            >
               <div
-                className={`w-full max-w-[800px] sm:max-w-[600px] h-full p-6 font-mono 
+                className={`w-full h-full p-6 font-mono 
                 terminal-scroll-${currentTheme.terminal} overflow-y-auto 
                 bg-black/40 backdrop-blur-sm ${currentTheme.borderColor} ${currentTheme.primaryColor}`}
                 style={{
@@ -92,6 +147,11 @@ export default function TerminalLayout({
           </div>
         )}
       </div>
+      <audio
+        id="cassette-insert-sound"
+        src="/assets/audio/insert-sound.mp3"
+        preload="auto"
+      />
     </main>
   );
 }

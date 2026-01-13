@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { CartridgeSelection } from '../lib/terminal-config';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -9,18 +9,30 @@ const RetroCassette = ({
   text,
   rotation,
   selected,
-  href
+  href,
 }: {
   color: string;
   text: string;
   rotation: number;
   selected: boolean;
-  href: string
+  href: string;
 }) => {
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData("text/plain", href);
+    if (linkRef.current) {
+      e.dataTransfer.setDragImage(linkRef.current, e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    }
+  };
+  
   return (
     <Link
       type="button"
       href={href}
+      draggable={true}
+      onDragStart={handleDragStart}
+      ref={linkRef}
       className="group relative w-full h-12 bg-gray-900 rounded-sm border-2 border-gray-700 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] flex items-center p-1 transition-transform hover:-translate-x-2"
     >
 
@@ -79,8 +91,6 @@ export default function TerminalMenu() {
 
   const pathname = usePathname();
   const selectedCartridge = pathname?.split("/")[2] as CartridgeSelection;
-  debugger
-
 
   const menuItems = [
     {
