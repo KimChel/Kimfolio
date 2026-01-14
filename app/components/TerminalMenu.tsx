@@ -96,7 +96,7 @@ export default function TerminalMenu() {
       label: "INSERT PROJECTS",
       href: "/terminal/projects",
       color: "bg-blue-500",
-      casette: "Stuff I built (mostly works)",
+      casette: "Stuff I built",
       selected: selectedCartridge === CartridgeSelection.PROJECTS_CARTRIDGE,
       rotation: -1,
       selection: CartridgeSelection.PROJECTS_CARTRIDGE,
