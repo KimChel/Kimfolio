@@ -7,7 +7,6 @@ import Engine from "./Engine";
 import Menu from "./Menu";
 import { WipBanner } from "./Banner";
 import { QuestLog } from "./QuestLog";
-import { ControlsHUD } from "./Controls";
 
 export default function Scene() {
   const x = useMotionValue(0);
@@ -39,7 +38,6 @@ export default function Scene() {
       <div className="absolute top-4 left-4 z-[60] sm:scale-90">
         <QuestLog />
       </div>
-      <ControlsHUD/>
       <motion.div
         style={{
           translateX: useTransform(x, (val) => val * 1.5),
@@ -73,7 +71,7 @@ export default function Scene() {
               }}
             />
 
-            <div className="absolute inset-0 z-10">
+            <div className="absolute inset-0 z-10 crt">
               {!engineReady && (
                 <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 font-(--font-pixel) text-xl text-white pointer-events-auto">
                   Loading... {Math.round(loadProgress * 100)}%

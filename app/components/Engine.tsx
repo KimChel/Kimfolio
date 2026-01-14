@@ -68,6 +68,8 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    const initialWidth = container.clientWidth || 1;
+    const initialHeight = container.clientHeight || 1;
 
     let isCancelled = false;
 
@@ -105,12 +107,9 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       //
       // ƒ-`ƒ-`   Carro SETUP   ƒ-`ƒ-`
       //
-      const loadedAssets = (await Assets.load(
-        [...ASSET_URLS],
-        (progress) => {
-          if (!isCancelled) onLoadProgress?.(progress);
-        }
-      )) as Record<string, any>;
+      const loadedAssets = (await Assets.load([...ASSET_URLS], (progress) => {
+        if (!isCancelled) onLoadProgress?.(progress);
+      })) as Record<string, any>;
 
       if (isCancelled) {
         app.destroy({ removeView: true }, { children: true, texture: true });
@@ -135,7 +134,7 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         carroSprite.play();
         carroSprite.anchor.set(0.5);
         carroSprite.eventMode = "static";
-        carroSprite.zIndex = 2;
+        carroSprite.zIndex = 5;
 
         const direction = Math.random() < 0.5 ? "left" : "right";
 
@@ -207,13 +206,13 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       //
 
       const streetLightTexture = loadedAssets["/assets/street_lights.png"];
-      const streetLampTexture = loadedAssets["/assets/street_lamp.png"]
+      const streetLampTexture = loadedAssets["/assets/street_lamp.png"];
 
       const streetLightSprite1 = new Sprite(streetLightTexture);
-      const streetlampSprite1 = new Sprite(streetLampTexture)
-      
+      const streetlampSprite1 = new Sprite(streetLampTexture);
+
       const streetLightSprite2 = new Sprite(streetLightTexture);
-      const streetlampSprite2 = new Sprite(streetLampTexture)
+      const streetlampSprite2 = new Sprite(streetLampTexture);
 
       streetLightSprite1.anchor.set(0.5, 1);
       streetLightSprite1.x = container!.clientWidth * 0.303;
@@ -237,7 +236,7 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
 
       streetlampSprite2.anchor.set(0.5, 1);
       streetlampSprite2.x = container!.clientWidth * 0.733;
-      streetlampSprite2.y = container!.clientHeight * 0.900;
+      streetlampSprite2.y = container!.clientHeight * 0.9;
       streetlampSprite2.scale.set(container!.clientWidth / 600);
       streetlampSprite2.zIndex = 3;
 
@@ -254,6 +253,18 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
       //
       // ƒ-`ƒ-`   NPC SETUP   ƒ-`ƒ-`
       //
+
+      const SIDEWALK_Y_REL = 0.88;
+      const SIDEWALK_MIN_REL = 0.26;
+      const SIDEWALK_MAX_REL = 0.82;
+      const WALK_RANGE_REL = 0.05;
+
+      const clamp = (value: number, min: number, max: number) =>
+        Math.max(min, Math.min(max, value));
+
+      const randomSidewalkX = () =>
+        SIDEWALK_MIN_REL +
+        Math.random() * (SIDEWALK_MAX_REL - SIDEWALK_MIN_REL - WALK_RANGE_REL);
 
       function loadNpcAnimations(
         basePath: string,
@@ -306,6 +317,28 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         animations: NpcEntity["animations"],
         options: NpcOptions = {}
       ): NpcEntity {
+        const normalizeWidth = (value?: number) =>
+          value === undefined ? undefined : value > 1 ? value / initialWidth : value;
+        const normalizeHeight = (value?: number) =>
+          value === undefined ? undefined : value > 1 ? value / initialHeight : value;
+
+        const baseXRel =
+          options.x !== undefined ? normalizeWidth(options.x)! : randomSidewalkX();
+        const baseYRel =
+          options.y !== undefined ? normalizeHeight(options.y)! : SIDEWALK_Y_REL;
+        const baseMinXRel =
+          options.minX !== undefined
+            ? normalizeWidth(options.minX)!
+            : clamp(baseXRel - WALK_RANGE_REL, SIDEWALK_MIN_REL, baseXRel);
+        const baseMaxXRel =
+          options.maxX !== undefined
+            ? normalizeWidth(options.maxX)!
+            : clamp(
+                baseXRel + WALK_RANGE_REL,
+                baseXRel + WALK_RANGE_REL / 2,
+                SIDEWALK_MAX_REL
+              );
+
         return {
           sprite: animations.idle,
           animations,
@@ -315,10 +348,10 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
           speed: options.speed ?? 0.1,
           minX: 0,
           maxX: 0,
-          minXRel: options.minX,
-          maxXRel: options.maxX,
-          xRel: options.x,
-          yRel: options.y,
+          minXRel: baseMinXRel,
+          maxXRel: baseMaxXRel,
+          xRel: baseXRel,
+          yRel: baseYRel,
         };
       }
 
@@ -333,36 +366,14 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         return npc;
       }
 
-      const npc1Animations = loadNpcAnimations(
-        "/assets/npc/npc1",
-        true,
-        true
-      );
+      const npc1Animations = loadNpcAnimations("/assets/npc/npc1", true, true);
 
-      const npc1Options:NpcOptions = {
-        x: 500, y:524
-      }
-      
-      const npc2Animations = loadNpcAnimations(
-        "/assets/npc/npc2",
-        false,
-        true
-      );
-      const npc3Animations = loadNpcAnimations(
-        "/assets/npc/npc3",
-        true,
-        true
-      );
-      const npc4Animations = loadNpcAnimations(
-        "/assets/npc/npc4",
-        true,
-        true
-      );
-      const npc5Animations = loadNpcAnimations(
-        "/assets/npc/npc5",
-        false,
-        true
-      );
+      const npc1Options: NpcOptions = {};
+
+      const npc2Animations = loadNpcAnimations("/assets/npc/npc2", false, true);
+      const npc3Animations = loadNpcAnimations("/assets/npc/npc3", true, true);
+      const npc4Animations = loadNpcAnimations("/assets/npc/npc4", true, true);
+      const npc5Animations = loadNpcAnimations("/assets/npc/npc5", false, true);
 
       addNpc(npc1Animations, npc1Options);
       addNpc(npc2Animations);
@@ -429,6 +440,7 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         const neonScale = container!.clientWidth / 600;
         const dishScale = container!.clientWidth / 600;
         const lightScale = container!.clientWidth / 600;
+        const lampScale = container!.clientWidth / 600;
         const devSignScale = container!.clientWidth / 600;
         const npcScale48 = container!.clientWidth / 800;
         const npcScale32 = container!.clientWidth / 1000;
@@ -437,6 +449,8 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         dishSprite.scale.set(dishScale);
         streetLightSprite1.scale.set(lightScale);
         streetLightSprite2.scale.set(lightScale);
+        streetlampSprite1.scale.set(lampScale)
+        streetlampSprite2.scale.set(lampScale)
         devSign.scale.set(devSignScale);
 
         neonSprite.x = container!.clientWidth * neonRelX;
@@ -448,8 +462,14 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         streetLightSprite1.x = container!.clientWidth * 0.303;
         streetLightSprite1.y = container!.clientHeight * 1.009;
 
+        streetlampSprite1.x = container!.clientWidth * 0.312;
+        streetlampSprite1.y = container!.clientHeight * 0.898;
+
         streetLightSprite2.x = container!.clientWidth * 0.725;
         streetLightSprite2.y = container!.clientHeight * 1.013;
+
+        streetlampSprite2.x = container!.clientWidth * 0.733;
+        streetlampSprite2.y = container!.clientHeight * 0.9;
 
         devSign.x = container!.clientWidth * devSignRelX;
         devSign.y = container!.clientHeight * devSignRelY;
@@ -461,14 +481,14 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
             a?.scale.set(scale);
           });
 
+        
+
           const fallbackMinRel = 0.3 + index * 0.03;
           const minXRel = npc.minXRel ?? fallbackMinRel;
           const maxXRel = npc.maxXRel ?? minXRel + 0.08;
 
-          npc.minX =
-            minXRel > 1 ? minXRel : container!.clientWidth * minXRel;
-          npc.maxX =
-            maxXRel > 1 ? maxXRel : container!.clientWidth * maxXRel;
+          npc.minX = minXRel > 1 ? minXRel : container!.clientWidth * minXRel;
+          npc.maxX = maxXRel > 1 ? maxXRel : container!.clientWidth * maxXRel;
 
           const xRel = npc.xRel ?? minXRel;
           const yRel = npc.yRel ?? 0.88;
@@ -604,7 +624,8 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
               car.sprite.scale.x = -Math.abs(car.sprite.scale.x);
             }
 
-            const targetGround = car.direction === "left" ? ground : lowerGround;
+            const targetGround =
+              car.direction === "left" ? ground : lowerGround;
 
             if (Matter.Collision.collides(car.body, targetGround)) {
               Matter.Body.setVelocity(car.body, {
@@ -649,9 +670,9 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
         app.stage.addChild(neonSprite);
         app.stage.addChild(dishSprite);
         app.stage.addChild(streetLightSprite1);
-        app.stage.addChild(streetlampSprite1)
+        app.stage.addChild(streetlampSprite1);
         app.stage.addChild(streetLightSprite2);
-        app.stage.addChild(streetlampSprite2)
+        app.stage.addChild(streetlampSprite2);
         app.stage.addChild(devSign);
         setInterval(() => {
           allNpcs.forEach((npc) => {
