@@ -11,6 +11,15 @@ import BackButton from "../components/BackButton";
 import Menu from "../components/Menu";
 import TerminalMenu from "../components/TerminalMenu";
 import useWindowResize from "../hooks/useWindowResize";
+import Link from "next/link";
+
+const mobileTabs = [
+  { label: "ABOUT", href: "/terminal/about", color: "text-green-500" },
+  { label: "PROJ", href: "/terminal/projects", color: "text-cyan-400" },
+  { label: "SKILLS", href: "/terminal/skills", color: "text-amber-500" },
+  { label: "CV", href: "/terminal/cv", color: "text-white" },
+  { label: "CONTACT", href: "/terminal/contact", color: "text-rose-500" },
+];
 
 export default function TerminalLayout({
   children,
@@ -21,6 +30,8 @@ export default function TerminalLayout({
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [windowWidth, windowHeight] = useWindowResize();
+
+  const isMobile = windowWidth > 0 && windowWidth < 768;
 
   const imageAspectRatio = 600 / 350;
   const windowAspectRatio = windowWidth / windowHeight;
@@ -75,6 +86,83 @@ export default function TerminalLayout({
     return () => clearTimeout(timer);
   }, [pathname]);
 
+  /* ── MOBILE LAYOUT ── */
+  if (isMobile) {
+    return (
+      <main className="w-full h-[100dvh] bg-black flex flex-col overflow-hidden font-mono">
+        {/* Header */}
+        <header
+          className={`flex items-center gap-3 px-4 py-3 border-b ${currentTheme.borderColor} shrink-0`}
+        >
+          <Link
+            href="/"
+            className={`shrink-0 w-9 h-9 border ${currentTheme.borderColor} flex items-center justify-center ${currentTheme.primaryColor} text-lg`}
+          >
+            ←
+          </Link>
+          <span
+            className={`flex-1 text-center text-[10px] tracking-[0.25em] uppercase ${currentTheme.primaryColor}`}
+          >
+            {currentTheme.name}
+          </span>
+          {/* spacer to visually center the title */}
+          <div className="w-9 shrink-0" />
+        </header>
+
+        {/* Content */}
+        {loading ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div
+              className={`border ${currentTheme.borderColor} ${currentTheme.primaryColor} px-6 py-5 uppercase tracking-[0.08em] min-w-[220px]`}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <span>{currentTheme.name}</span>
+                <span className="animate-blink">_</span>
+              </div>
+              <div
+                className={`relative w-full h-2 border ${currentTheme.borderColor} bg-black overflow-hidden`}
+              >
+                <div
+                  className={`absolute inset-0 w-1/2 ${currentTheme.bootColor} animate-loading-bar opacity-80`}
+                />
+              </div>
+              <div className="mt-2 text-xs opacity-80">
+                {currentTheme.loadingText}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 min-h-0 overflow-y-auto relative crt">
+            <div
+              className={`min-h-full p-4 ${currentTheme.primaryColor}`}
+              style={{ textShadow: `0 0 4px currentColor` }}
+            >
+              {children}
+            </div>
+          </div>
+        )}
+
+        {/* Bottom tab bar */}
+        <nav
+          className={`border-t ${currentTheme.borderColor} flex shrink-0`}
+        >
+          {mobileTabs.map((tab) => (
+            <Link
+              key={tab.label}
+              href={tab.href}
+              className={`flex-1 flex items-center justify-center py-3 text-[8px] uppercase tracking-wider transition-colors ${
+                pathname === tab.href ? tab.color : "text-white/25"
+              }`}
+            >
+              {tab.label}
+            </Link>
+          ))}
+        </nav>
+      </main>
+    );
+  }
+
+  /* ── DESKTOP LAYOUT ── */
   return (
     <main className="relative w-full h-[100dvh] bg-black overflow-hidden">
       <div
@@ -129,8 +217,8 @@ export default function TerminalLayout({
               className="flex flex-col items-center justify-center crt"
             >
               <div
-                className={`w-full h-full p-6 font-mono 
-                terminal-scroll-${currentTheme.terminal} overflow-y-auto 
+                className={`w-full h-full p-6 font-mono
+                terminal-scroll-${currentTheme.terminal} overflow-y-auto
                 bg-black/40 backdrop-blur-sm ${currentTheme.borderColor} ${currentTheme.primaryColor}`}
                 style={{
                   imageRendering: "pixelated",
@@ -140,7 +228,6 @@ export default function TerminalLayout({
                   }`,
                 }}
               >
-                {/* THIS IS WHERE THE PAGE CONTENT IS INJECTED */}
                 {children}
               </div>
             </div>

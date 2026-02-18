@@ -12,9 +12,15 @@
 * {
   cursor: none !important;
 }
-/* OR, if you only want it hidden on the body */
 body {
   cursor: none;
+}
+
+/* Restore the native cursor on touch/pointer-coarse devices */
+@media (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
 }
 
 /* button:hover{

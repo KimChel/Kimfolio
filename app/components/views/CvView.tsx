@@ -13,7 +13,7 @@ export default function CvView(){
   };
 
   return (
-    <div className="w-full h-full flex flex-col font-mono text-white p-2 overflow-hidden">
+    <div className="w-full h-auto md:h-full flex flex-col font-mono text-white p-2 md:overflow-hidden">
       {/* --- HEADER: Toolbar style --- */}
       <div className="border-b-2 border-white mb-4 flex justify-between items-end pb-2">
         <div className="flex items-center gap-4">
@@ -25,9 +25,9 @@ export default function CvView(){
         <div className="text-xs hidden sm:block">READ_ONLY_MODE</div>
       </div>
 
-      <div className="flex flex-1 gap-6 overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-1 gap-6 md:overflow-hidden">
         {/* --- LEFT COLUMN: ID & Metadata --- */}
-        <div className="w-1/3 flex flex-col gap-4 border-r border-white/30 pr-4 overflow-y-auto terminal-scroll-gray">
+        <div className="w-full md:w-1/3 flex flex-col gap-4 border-b md:border-b-0 md:border-r border-white/30 pb-4 md:pb-0 pr-0 md:pr-4 md:overflow-y-auto md:terminal-scroll-gray">
           {/* Pixelated Photo Container */}
           <div className="relative w-full aspect-[3/4] border-2 border-white p-1">
             <div className="w-full h-full relative bg-gray-900">
@@ -75,7 +75,7 @@ export default function CvView(){
         </div>
 
         {/* --- RIGHT COLUMN: Document Content Preview --- */}
-        <div className="flex-1 overflow-y-auto pr-2 terminal-scroll-gray space-y-6 text-sm">
+        <div className="flex-1 md:overflow-y-auto md:pr-2 md:terminal-scroll-gray space-y-6 text-sm">
           {/* Section: Experience */}
           <section>
             <h3 className="border-b border-white/50 mb-2 pb-1 text-xs opacity-70 uppercase">

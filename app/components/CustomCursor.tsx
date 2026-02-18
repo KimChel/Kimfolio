@@ -5,7 +5,12 @@ import { useEffect, useState } from "react";
 export default function CustomCursor() {
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [clicked, setClicked] = useState(false);
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -71,6 +76,8 @@ export default function CustomCursor() {
     if (isHovered) return "url('/assets/cursor/pointerHover.png')"
     return "url('/assets/cursor/pointer.png')"
   }
+
+  if (isTouchDevice) return null;
 
   return (
 
