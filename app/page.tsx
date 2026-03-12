@@ -6,11 +6,11 @@ import Scene from "@/app/components/Scene";
 import MobileLanding from "@/app/components/MobileLanding";
 
 const layers = [
-  { src: "/bg2/1.png", scale: 1 },
-  { src: "/bg2/2.png", scale: 1 },
-  { src: "/bg2/3.png", scale: 1 },
-  { src: "/bg2/4.png", scale: 1 },
-  { src: "/bg2/5.png", scale: 1 },
+  { src: "/bg1/1.png", scale: 1 },
+  { src: "/bg1/2.png", scale: 1.5 },
+  { src: "/bg1/3.png", scale: 1.4 },
+  { src: "/bg1/4.png", scale: 1.3 },
+  { src: "/bg1/5.png", scale: 1.2 },
 ];
 
 export default function Home() {

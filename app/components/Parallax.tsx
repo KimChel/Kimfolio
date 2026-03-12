@@ -50,7 +50,7 @@ export default function Parallax({ layers }: Props) {
               style={{
                 backgroundImage: `url(${layer.src})`,
                 backgroundSize: "cover",
-                backgroundPosition: "center",
+                backgroundPosition: index === 0 ? "center top" : "center bottom",
                 imageRendering: "pixelated"
               }}
             ></div>

@@ -6,11 +6,11 @@ export default function Menu() {
 
   // Define the menu links for easy scaling
   const menuItems = [
-    { label: "ABOUT", href: "/terminal/about", color: "bg-green-500" },
-    { label: "PROJECTS", href: "/terminal/projects", color: "bg-blue-500" },
-    { label: "SKILLS", href: "/terminal/skills", color: "bg-yellow-500" },
-    { label: "CV", href: "/terminal/cv", color: "bg-purple-500" },
-    { label: "CONTACT", href: "/terminal/contact", color: "bg-red-500" },
+    { label: "ABOUT", href: "/terminal/about", color: "bg-green-500", icon: "assets/menu/about.png" },
+    { label: "PROJECTS", href: "/terminal/projects", color: "bg-blue-500", icon: "assets/menu/projects.png"  },
+    { label: "SKILLS", href: "/terminal/skills", color: "bg-yellow-500", icon: "assets/menu/skills.png"  },
+    { label: "CV", href: "/terminal/cv", color: "bg-purple-500", icon: "assets/menu/cv.png"  },
+    { label: "CONTACT", href: "/terminal/contact", color: "bg-red-500", icon: "assets/menu/contact.png"  },
   ];
 
   return (
@@ -43,10 +43,13 @@ export default function Menu() {
                   onClick={() => setOpenMenu(false)}
                   className="group flex items-center w-full bg-white border-2 border-black p-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none transition-all"
                 >
-                  {/* Icon Placeholder */}
-                  <div
-                    className={`w-8 h-8 ${item.color} border-2 border-black mr-3 flex-shrink-0`}
-                  ></div>
+                  <div className="w-10 h-10 flex-shrink-0 bg-[#1a1a2e] border-2 border-black flex items-center justify-center mr-2">
+                    <img
+                      src={item.icon}
+                      className="w-8 h-8"
+                      style={{ imageRendering: "pixelated" }}
+                    />
+                  </div>
 
                   <span className="text-black text-sm font-bold tracking-tighter uppercase group-hover:text-blue-600">
                     {item.label}

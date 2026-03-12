@@ -6,7 +6,7 @@ import Image from "next/image";
 import Engine from "./Engine";
 import Menu from "./Menu";
 import { WipBanner } from "./Banner";
-import { QuestLog } from "./QuestLog";
+
 
 export default function Scene() {
   const x = useMotionValue(0);
@@ -35,9 +35,6 @@ export default function Scene() {
       <nav className="absolute top-4 right-4 z-50 text-left sm:scale-80">
         <Menu />
       </nav>
-      <div className="absolute top-4 left-4 z-[60] sm:scale-90">
-        <QuestLog />
-      </div>
       <motion.div
         style={{
           translateX: useTransform(x, (val) => val * 1.5),
