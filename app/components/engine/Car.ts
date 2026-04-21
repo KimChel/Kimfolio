@@ -22,6 +22,13 @@ export class Car {
   private readonly ground: Matter.Body;
   private readonly lowerGround: Matter.Body;
 
+  private flyingAway = false;
+  private flyVx = 0;
+  private flyVy = 0;
+  private destroyed = false;
+
+  public onFlewAway?: () => void;
+
   constructor(
     frames: any[],
     direction: "left" | "right",
@@ -32,6 +39,7 @@ export class Car {
     lowerGround: Matter.Body,
     groundCategories: GroundCategories
   ) {
+
     this.direction = direction;
     this.stage = stage;
     this.world = world;
@@ -95,8 +103,25 @@ export class Car {
         x: (last.x - first.x) / dt,
         y: (last.y - first.y) / dt,
       });
+
+      console.log(Matter.Body.getVelocity(this.body))
+      if (Matter.Body.getVelocity(this.body).y <= -5) {
+        applyThrowFar()
+      }
+
       history = [];
     };
+
+    const applyThrowFar = () => {
+      this.flyingAway = true
+
+      const vel = Matter.Body.getVelocity(this.body)
+      this.flyVx = vel.x
+      this.flyVy = vel.y
+
+      Matter.Body.setStatic(this.body, true);
+      Matter.Body.setVelocity(this.body, { x: 0, y: 0 });
+    }
 
     this.sprite.on("pointerdown", (e: any) => {
       this.dragging = true;
@@ -115,6 +140,8 @@ export class Car {
       });
     });
 
+    
+
     const release = () => {
       if (!this.dragging) return;
       this.dragging = false;
@@ -130,6 +157,30 @@ export class Car {
 
   /** Move the car and sync the sprite to the physics body. Call once per frame. */
   tick() {
+    if (this.destroyed) return;
+
+    if(this.flyingAway){
+      const gravity = 0.09;   // pulls the car back down each frame
+      const drag = 0.99;      // air resistance on horizontal movement
+      const shrinkRate = 0.97; // slow shrink — car recedes into background
+
+      this.flyVy += gravity;   // gravity accumulates, so it arcs up then falls
+      this.flyVx *= drag;      // horizontal slows down naturally
+
+      this.sprite.x += this.flyVx;
+      this.sprite.y += this.flyVy;
+
+      // shrink both axes uniformly to keep proportions
+      const sx = this.sprite.scale.x > 0 ? 1 : -1; // preserve flip direction
+      this.sprite.scale.x *= shrinkRate;
+      this.sprite.scale.y *= shrinkRate;
+
+      if(Math.abs(this.sprite.scale.x) < 0.02) {
+        this.onFlewAway?.()
+      }
+      return
+    }
+
     if (!this.dragging) {
       const speed = Math.random() * 1.5 + 0.5;
 
@@ -168,6 +219,8 @@ export class Car {
 
   /** Remove sprite from stage and body from world. */
   destroy() {
+    this.destroyed = true;
+    this.flyingAway = false;
     Matter.World.remove(this.world, this.body);
     this.stage.removeChild(this.sprite);
     this.sprite.destroy();

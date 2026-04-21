@@ -1,6 +1,6 @@
 "use client";
 
-import { Application, AnimatedSprite, Assets, Sprite, TextureStyle } from "pixi.js";
+import { Application, AnimatedSprite, Assets, Sprite, TextureStyle, Graphics, Container } from "pixi.js";
 import Matter from "matter-js";
 import { useEffect, useRef } from "react";
 import { Car } from "./engine/Car";
@@ -197,6 +197,12 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
           frames, direction, container, app.stage,
           physics.world, ground, lowerGround, groundCategories
         );
+
+        car.onFlewAway = () => {
+          spawnStar(app.stage, car.sprite.x, car.sprite.y)
+          car.destroy();
+        }
+        
         activeCars.push(car);
       };
 
@@ -294,4 +300,34 @@ export default function Engine({ onLoadProgress, onLoaded }: EngineProps) {
   }, []);
 
   return <div ref={containerRef} className="absolute inset-0" />;
+}
+
+function spawnStar(stage: Container, x:number, y:number){
+    const star = new Graphics();
+    star.fill({ color: 0xffffff });
+    star.star(0, 0, 4, 8, 3); // 4 points, 8px outer, 3px inner
+    star.fill();
+    star.x = x;
+    star.y = y;
+    star.zIndex = 10;
+    star.alpha = 1;
+    stage.addChild(star);
+
+    // Animate: grow then fade
+    let frame = 0;
+    const animate = () => {
+      frame++;
+      if (frame < 15) {
+        star.scale.set(1 + frame * 0.05);
+      } else {
+        star.alpha -= 0.05;
+      }
+      if (star.alpha <= 0) {
+        stage.removeChild(star);
+        star.destroy();
+        return;
+      }
+      requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);  
 }
